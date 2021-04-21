@@ -31,7 +31,8 @@ const callInput = document.getElementById('callInput');
 const answerButton = document.getElementById('answerButton');
 const remoteVideo = document.getElementById('remoteVideo');
 const hangupButton = document.getElementById('hangupButton');
-
+let callerId;
+let callId;
 
 
 // 1. Setup media sources
@@ -65,7 +66,7 @@ webcamButton.onclick = async () => {
 // 2. Create an offer
 callButton.onclick = async () => {
   // Reference Firestore collections for signaling
-  const callerId = prompt('Please enter caller ID','')
+  callerId = prompt('Please enter caller ID','');
   const callDoc = firestore.collection('calls').doc(callerId);
   const offerCandidates = callDoc.collection('offerCandidates');
   const answerCandidates = callDoc.collection('answerCandidates');
@@ -112,7 +113,8 @@ callButton.onclick = async () => {
 
 // 3. Answer the call with the unique ID
 answerButton.onclick = async () => {
-  const callId = callInput.value;
+  //const callId = callInput.value;
+  callId = prompt('Please enter call ID','');
   const callDoc = firestore.collection('calls').doc(callId);
   const answerCandidates = callDoc.collection('answerCandidates');
   const offerCandidates = callDoc.collection('offerCandidates');
