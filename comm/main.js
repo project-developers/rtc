@@ -382,7 +382,7 @@ function hangup() {
   console.log('Ending call');
   pc.close();
   //pc2.close();
-  pc = null;
+  //pc = null;
   //pc2 = null;
   callInput.value = '';
         
