@@ -157,7 +157,7 @@ const upgradeButton = document.getElementById('upgradeButton');
 //hangupButton.disabled = true;
 //upgradeButton.disabled = true;
 startButton.onclick = start;
-callButton.onclick = call;
+//callButton.onclick = call;
 upgradeButton.onclick = upgrade;
 hangupButton.onclick = hangup;
 
