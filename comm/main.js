@@ -59,11 +59,15 @@ remoteVideo.onresize = () => {
   }
 };
 
-
+const offerOptions = {
+  offerToReceiveAudio: 1,
+  offerToReceiveVideo: 0
+};
 // 1. Setup media sources
 
+
 webcamButton.onclick = async () => {
-  localStream = await navigator.mediaDevices.getUserMedia({ video: true, audio: true });
+  localStream = await navigator.mediaDevices.getUserMedia({ video: false, audio: true });
   //localStream.muted = true;
   remoteStream = new MediaStream();
 
@@ -216,12 +220,12 @@ remoteVideo.onresize = () => {
 */
 //let localStream;
 let pc1;
-let pc2;
+let pc2;/*
 const offerOptions = {
   offerToReceiveAudio: 1,
   offerToReceiveVideo: 0
 };
-
+*/
 function getName(pc) {
   return (pc === pc1) ? 'pc1' : 'pc2';
 }
@@ -229,7 +233,7 @@ function getName(pc) {
 function getOtherPc(pc) {
   return (pc === pc1) ? pc2 : pc1;
 }
-
+/*
 function gotStream(stream) {
   console.log('Received local stream');
   localVideo.srcObject = stream;
@@ -248,7 +252,7 @@ function start() {
       .then(gotStream)
       .catch(e => alert(`getUserMedia() error: ${e.name}`));
 }
-
+*/
 function call() {
   callButton.disabled = true;
   upgradeButton.disabled = false;
