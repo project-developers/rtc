@@ -183,7 +183,7 @@ remoteVideo.onresize = () => {
   }
 };
 
-let localStream;
+//let localStream;
 let pc1;
 let pc2;
 const offerOptions = {
