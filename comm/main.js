@@ -381,9 +381,9 @@ function upgrade() {
 function hangup() {
   console.log('Ending call');
   pc.close();
-  pc2.close();
+  //pc2.close();
   pc = null;
-  pc2 = null;
+  //pc2 = null;
   callInput.value = '';
         
   const videoTracks = localStream.getVideoTracks();
