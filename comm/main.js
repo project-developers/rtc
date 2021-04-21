@@ -30,7 +30,7 @@ const webcamVideo = document.getElementById('webcamVideo');
 const callInput = document.getElementById('callInput');
 const answerButton = document.getElementById('answerButton');
 const remoteVideo = document.getElementById('remoteVideo');
-const hangupButton = document.getElementById('hangupButton');
+//const hangupButton = document.getElementById('hangupButton');
 
 // 1. Setup media sources
 
