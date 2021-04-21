@@ -36,7 +36,7 @@ let callId;
 
 hangupButton.onclick = hangup;
 
-let startTime;
+//let startTime;
 const localVideo = document.getElementById('localVideo');
 
 localVideo.addEventListener('loadedmetadata', function() {
