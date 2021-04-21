@@ -130,6 +130,8 @@ callButton.onclick = async () => {
       pc.setRemoteDescription(answerDescription);
     }
   });
+       
+  callId = callerId;
 
   // When answered, add candidate to peer connection
   answerCandidates.onSnapshot((snapshot) => {
@@ -137,8 +139,6 @@ callButton.onclick = async () => {
       if (change.type === 'added') {
         const candidate = new RTCIceCandidate(change.doc.data());
         pc.addIceCandidate(candidate);
-        callInput.value = '';
-        callId = callerId;
       }
     });
   });
@@ -384,7 +384,8 @@ function hangup() {
   pc2.close();
   pc = null;
   pc2 = null;
-
+  callInput.value = '';
+        
   const videoTracks = localStream.getVideoTracks();
   videoTracks.forEach(videoTrack => {
     videoTrack.stop();
