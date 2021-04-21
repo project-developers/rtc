@@ -137,11 +137,11 @@ callButton.onclick = async () => {
       if (change.type === 'added') {
         const candidate = new RTCIceCandidate(change.doc.data());
         pc.addIceCandidate(candidate);
+        callInput.value = '';
+        callId = callerId;
       }
     });
   });
-        callInput.value = '';
-callerId = callId;
   hangupButton.disabled = false;
 };
 
@@ -173,6 +173,8 @@ answerButton.onclick = async () => {
   };
 
   await callDoc.update({ answer });
+    
+    callerId = callId;
 
   offerCandidates.onSnapshot((snapshot) => {
     snapshot.docChanges().forEach((change) => {
@@ -183,7 +185,6 @@ answerButton.onclick = async () => {
       }
     });
   });
-    callerId = callId;
 };
 
 /*
