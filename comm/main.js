@@ -70,6 +70,7 @@ webcamButton.onclick = async () => {
   localStream = await navigator.mediaDevices.getUserMedia({ video: false, audio: true });
   //localStream.muted = true;
   remoteStream = new MediaStream();
+  pc = new RTCPeerConnection(servers);
 
   // Push tracks from local stream to peer connection
   localStream.getTracks().forEach((track) => {
@@ -105,8 +106,6 @@ callButton.onclick = async () => {
   const answerCandidates = callDoc.collection('answerCandidates');
 
   callInput.value = callDoc.id;
-  
-  pc = new RTCPeerConnection(servers);
 
   // Get candidates for caller, save to db
   pc.onicecandidate = (event) => {
@@ -156,8 +155,6 @@ answerButton.onclick = async () => {
   const callDoc = firestore.collection('calls').doc(callId);
   const answerCandidates = callDoc.collection('answerCandidates');
   const offerCandidates = callDoc.collection('offerCandidates');
-        
-  pc = new RTCPeerConnection(servers);
 
   pc.onicecandidate = (event) => {
     event.candidate && answerCandidates.add(event.candidate.toJSON());
