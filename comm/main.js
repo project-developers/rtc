@@ -19,7 +19,7 @@ const servers = {
 };
 
 // Global State
-let pc; // = new RTCPeerConnection(servers);
+let pc = new RTCPeerConnection(servers);
 let localStream = null;
 let remoteStream = null;
 
@@ -34,6 +34,7 @@ const hangupButton = document.getElementById('hangupButton');
 let callerId = 0;
 let callId = 0;
 
+callerId = prompt('Please enter your ID','');
 hangupButton.onclick = hangup;
 
 let startTime;
@@ -61,16 +62,16 @@ remoteVideo.onresize = () => {
 
 const offerOptions = {
   offerToReceiveAudio: 1,
-  offerToReceiveVideo: 0
+  offerToReceiveVideo: 1
 };
 // 1. Setup media sources
 
 
 webcamButton.onclick = async () => {
-  localStream = await navigator.mediaDevices.getUserMedia({ video: false, audio: true });
+  localStream = await navigator.mediaDevices.getUserMedia({ video: true, audio: true });
   //localStream.muted = true;
   remoteStream = new MediaStream();
-  pc = new RTCPeerConnection(servers);
+  //pc = new RTCPeerConnection(servers);
 
   // Push tracks from local stream to peer connection
   localStream.getTracks().forEach((track) => {
@@ -92,15 +93,15 @@ webcamButton.onclick = async () => {
 
   callButton.disabled = false;
   answerButton.disabled = false;
-  webcamButton.disabled = true;
+  webcamButton.disabled = false;
 };
 
 // 2. Create an offer
 callButton.onclick = async () => {
   // Reference Firestore collections for signaling
-  if(callerId == 0){
+  /*if(callerId == 0){
     callerId = prompt('Please enter caller ID','');
-  };
+  };*/
   const callDoc = firestore.collection('calls').doc(callerId);
   const offerCandidates = callDoc.collection('offerCandidates');
   const answerCandidates = callDoc.collection('answerCandidates');
@@ -132,7 +133,7 @@ callButton.onclick = async () => {
     }
   });
        
-  callId = callerId;
+  //callId = callerId;
 
   // When answered, add candidate to peer connection
   answerCandidates.onSnapshot((snapshot) => {
@@ -175,7 +176,7 @@ answerButton.onclick = async () => {
 
   await callDoc.update({ answer });
     
-    callerId = callId;
+    //callerId = callId;
 
   offerCandidates.onSnapshot((snapshot) => {
     snapshot.docChanges().forEach((change) => {
@@ -385,7 +386,7 @@ function hangup() {
   //pc2.close();
   //pc = null;
   //pc2 = null;
-  callInput.value = '';
+  //callInput.value = '';
         
   const videoTracks = localStream.getVideoTracks();
   videoTracks.forEach(videoTrack => {
