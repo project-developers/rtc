@@ -19,7 +19,7 @@ const servers = {
 };
 
 // Global State
-var pc; // = new RTCPeerConnection(servers);
+const pc; // = new RTCPeerConnection(servers);
 let localStream = null;
 let remoteStream = null;
 
