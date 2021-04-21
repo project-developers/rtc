@@ -357,4 +357,3 @@ function hangup() {
   callButton.disabled = false;
 }
 
-  callButton.disabled = false;
