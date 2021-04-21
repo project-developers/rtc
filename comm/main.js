@@ -140,7 +140,8 @@ callButton.onclick = async () => {
       }
     });
   });
-
+        callInput.value = '';
+callerId = callId;
   hangupButton.disabled = false;
 };
 
@@ -182,6 +183,7 @@ answerButton.onclick = async () => {
       }
     });
   });
+    callerId = callId;
 };
 
 /*
