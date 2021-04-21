@@ -373,9 +373,9 @@ function upgrade() {
 
 function hangup() {
   console.log('Ending call');
-  pc1.close();
+  pc.close();
   pc2.close();
-  pc1 = null;
+  pc = null;
   pc2 = null;
 
   const videoTracks = localStream.getVideoTracks();
