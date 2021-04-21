@@ -1,12 +1,10 @@
-/*import './style.css';
 
+/*import './style.css';
 import firebase from 'firebase/app';
 import 'firebase/firestore';
-
 const firebaseConfig = {
   // your config
 };
-
 if (!firebase.apps.length) {
   firebase.initializeApp(firebaseConfig);
 }
@@ -39,6 +37,7 @@ const hangupButton = document.getElementById('hangupButton');
 
 webcamButton.onclick = async () => {
   localStream = await navigator.mediaDevices.getUserMedia({ video: true, audio: true });
+  //localStream.muted = true;
   remoteStream = new MediaStream();
 
   // Push tracks from local stream to peer connection
@@ -54,6 +53,7 @@ webcamButton.onclick = async () => {
   };
 
   webcamVideo.srcObject = localStream;
+  webcamVideo.muted = true;
   remoteVideo.srcObject = remoteStream;
 
   callButton.disabled = false;
@@ -64,7 +64,8 @@ webcamButton.onclick = async () => {
 // 2. Create an offer
 callButton.onclick = async () => {
   // Reference Firestore collections for signaling
-  const callDoc = firestore.collection('calls').doc();
+  const callerId = prompt('Please enter caller ID','')
+  const callDoc = firestore.collection('calls').doc(callerId);
   const offerCandidates = callDoc.collection('offerCandidates');
   const answerCandidates = callDoc.collection('answerCandidates');
 
