@@ -36,7 +36,7 @@ let callId;
 
 hangupButton.onclick = hangup;
 
-//let startTime;
+let startTime;
 const localVideo = document.getElementById('localVideo');
 
 localVideo.addEventListener('loadedmetadata', function() {
@@ -176,7 +176,7 @@ answerButton.onclick = async () => {
   });
 };
 
-
+/*
 
 const startButton = document.getElementById('startButton');
 //const callButton = document.getElementById('callButton');
@@ -213,7 +213,7 @@ remoteVideo.onresize = () => {
     startTime = null;
   }
 };
-
+*/
 //let localStream;
 let pc1;
 let pc2;
