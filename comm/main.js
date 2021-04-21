@@ -34,7 +34,7 @@ const hangupButton = document.getElementById('hangupButton');
 let callerId = 0;
 let callId = 0;
 
-callerId = prompt('Please enter your ID','');
+//callerId = prompt('Please enter your ID','');
 hangupButton.onclick = hangup;
 
 let startTime;
@@ -99,9 +99,9 @@ webcamButton.onclick = async () => {
 // 2. Create an offer
 callButton.onclick = async () => {
   // Reference Firestore collections for signaling
-  /*if(callerId == 0){
+  if(callerId == 0){
     callerId = prompt('Please enter caller ID','');
-  };*/
+  };
   const callDoc = firestore.collection('calls').doc(callerId);
   const offerCandidates = callDoc.collection('offerCandidates');
   const answerCandidates = callDoc.collection('answerCandidates');
