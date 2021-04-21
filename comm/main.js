@@ -34,6 +34,31 @@ const hangupButton = document.getElementById('hangupButton');
 let callerId;
 let callId;
 
+hangupButton.onclick = hangup;
+
+let startTime;
+const localVideo = document.getElementById('localVideo');
+
+localVideo.addEventListener('loadedmetadata', function() {
+  console.log(`Local video videoWidth: ${this.videoWidth}px,  videoHeight: ${this.videoHeight}px`);
+});
+
+remoteVideo.addEventListener('loadedmetadata', function() {
+  console.log(`Remote video videoWidth: ${this.videoWidth}px,  videoHeight: ${this.videoHeight}px`);
+});
+
+remoteVideo.onresize = () => {
+  console.log(`Remote video size changed to ${remoteVideo.videoWidth}x${remoteVideo.videoHeight}`);
+  console.warn('RESIZE', remoteVideo.videoWidth, remoteVideo.videoHeight);
+  // We'll use the first onsize callback as an indication that video has started
+  // playing out.
+  if (startTime) {
+    const elapsedTime = window.performance.now() - startTime;
+    console.log(`Setup time: ${elapsedTime.toFixed(3)}ms`);
+    startTime = null;
+  }
+};
+
 
 // 1. Setup media sources
 
@@ -56,6 +81,8 @@ webcamButton.onclick = async () => {
 
   webcamVideo.srcObject = localStream;
   webcamVideo.muted = true;
+  localVideo.srcObject = localStream;
+  localVideo.muted = true;
   remoteVideo.srcObject = remoteStream;
 
   callButton.disabled = false;
