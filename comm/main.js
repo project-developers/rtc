@@ -26,11 +26,11 @@ let remoteStream = null;
 // HTML elements
 const webcamButton = document.getElementById('webcamButton');
 const webcamVideo = document.getElementById('webcamVideo');
-//const callButton = document.getElementById('callButton');
+const callButton = document.getElementById('callButton');
 const callInput = document.getElementById('callInput');
 const answerButton = document.getElementById('answerButton');
-//const remoteVideo = document.getElementById('remoteVideo');
-//const hangupButton = document.getElementById('hangupButton');
+const remoteVideo = document.getElementById('remoteVideo');
+const hangupButton = document.getElementById('hangupButton');
 
 // 1. Setup media sources
 
@@ -148,12 +148,12 @@ answerButton.onclick = async () => {
 
 
 const startButton = document.getElementById('startButton');
-const callButton = document.getElementById('callButton');
+//const callButton = document.getElementById('callButton');
 const upgradeButton = document.getElementById('upgradeButton');
-const hangupButton = document.getElementById('hangupButton');
-callButton.disabled = true;
-hangupButton.disabled = true;
-upgradeButton.disabled = true;
+//const hangupButton = document.getElementById('hangupButton');
+//callButton.disabled = true;
+//hangupButton.disabled = true;
+//upgradeButton.disabled = true;
 startButton.onclick = start;
 callButton.onclick = call;
 upgradeButton.onclick = upgrade;
@@ -161,7 +161,7 @@ hangupButton.onclick = hangup;
 
 let startTime;
 const localVideo = document.getElementById('localVideo');
-const remoteVideo = document.getElementById('remoteVideo');
+//const remoteVideo = document.getElementById('remoteVideo');
 
 localVideo.addEventListener('loadedmetadata', function() {
   console.log(`Local video videoWidth: ${this.videoWidth}px,  videoHeight: ${this.videoHeight}px`);
