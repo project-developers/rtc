@@ -19,7 +19,7 @@ peerConnection.onconnectionstatechange = ev => {
       break;
     case "failed":
       console.log("Error");
-      await document.location.reload(true);
+      document.location.reload(true);
       openButtonFunc();
       break;
     default:
