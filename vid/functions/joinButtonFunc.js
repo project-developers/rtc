@@ -12,7 +12,7 @@ const joinButtonFunc = async () => {
         })
 
         // Code for collecting ICE candidates below
-        const calleeCandidatesCollection = roomRef.collection("calleCandidates");
+        const calleeCandidatesCollection = roomRef.collection("calleeCandidates");
         peerConnection.addEventListener("icecandidate", event => {
           if(!event.candidate){
             // console.log('Got final candidate!');
