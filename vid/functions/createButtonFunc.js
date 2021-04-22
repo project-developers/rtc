@@ -13,21 +13,7 @@ peerConnection.onconnectionstatechange = ev => {
       break;
     case "disconnected":
       console.log("Disconnecting...");
- /*     const tracks = localVideo.srcObject.getTracks();
-      tracks.forEach(track => track.stop());
-          
-      if(remoteStream){
-            remoteStream.getTracks().forEach(track => track.stop())
-      }
-
-      if(peerConnection){
-          peerConnection.close();
-          peerConnection = null;
-          
-      }
-          
-      openButtonFunc();
-*/
+      document.location.reload(true);
       break;
     case "closed":
       console.log("Offline");
@@ -117,10 +103,4 @@ peerConnection.onconnectionstatechange = ev => {
           unsubscribe();
           unsubscribe2();
       }
-/*
-      peerConnection.addEventListener("connectionState", event => {
-        if(connectionState == "disconnected"){
-            hangupButtonFunc();
-        }
-      });*/
 }
