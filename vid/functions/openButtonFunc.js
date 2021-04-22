@@ -1,9 +1,5 @@
 const openButtonFunc = async () => {
     try {
-        const offerOptions = {
-            offerToReceiveAudio: 1,
-            offerToReceiveVideo: 0
-        };
         localStream = await navigator.mediaDevices.getUserMedia({ video: false, audio: true });
         localVideo.srcObject = localStream;
         localVideo.muted = true;
