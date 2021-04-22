@@ -6,7 +6,8 @@ const createButtonFunc = async () => {
     })
 
     // Code for collecting ICE candidates below
-    const roomRef = firestore.collection("rooms").doc("Tekn");
+    const callerId = prompt('Please enter caller ID','');
+    const roomRef = firestore.collection("rooms").doc(callerId);
     const callerCandidatesCollection = roomRef.collection("callerCandidates");
 
     peerConnection.addEventListener("icecandidate", event => {
