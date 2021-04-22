@@ -33,12 +33,13 @@
         <video id="remoteVideo" autoplay playsinline></video>
     </div>
 
-<section>
+    <section>
       <div >
         <form id="fileInfo">
           <input type="file" id="fileInput" name="files"/>
         </form>
         <button disabled id="sendFile">Send</button>
+	<!--onclick="createConnection()" -->
         <button disabled id="abortButton">Abort</button>
       </div>
 
@@ -52,9 +53,11 @@
         <progress id="receiveProgress" max="0" value="0"></progress>
       </div>
 
-      <div id="errorMsg">
-      <div id="bitrate"></div></div>
-      <a id="download"></a>
+      <div id="errorMsg"></div>
+      <div id="bitrate"></div>
+      <div id="averageBitrate"></div>
+      <div id="download"></div>
+      <!--a id="download"></a-->
       <span id="status"></span>
 
     </section>
