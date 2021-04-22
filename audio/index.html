@@ -1,1 +1,103 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="description" content="WebRTC code samples">
+    <meta name="viewport" content="width=device-width, user-scalable=yes, initial-scale=1, maximum-scale=1">
+    <meta itemprop="description" content="Client-side WebRTC code samples">
+    <meta itemprop="image" content="webrtc-icon-192x192.png">
+    <meta itemprop="name" content="WebRTC code samples">
+    <meta name="mobile-web-app-capable" content="yes">
+    <meta id="theme-color" name="theme-color" content="#ffffff">
 
+    <!--base target="_blank"-->
+
+    <title>Audio Call</title>
+
+    <link rel="icon" sizes="192x192" href="webrtc-icon-192x192.png">
+    <link href="//fonts.googleapis.com/css?family=Roboto:300,400,500,700" rel="stylesheet" type="text/css">
+    <link rel="stylesheet" href="main1.css"/>
+    <link rel="stylesheet" href="main2.css"/>
+
+    
+</head>
+<body>
+    <div>
+        <button id="open"  className="btn btn-open">Open Microphone and Camera</button>
+        <button id="create"  className="btn btn-open"> Create Room</button>
+        <button id="join"  className="btn btn-open">Join Room</button>
+        <button id="hangup"  className="btn btn-open">Hang Up</button>
+    </div>
+    <div>
+        <video id="localVideo" autoplay playsinline></video>
+        <video id="remoteVideo" autoplay playsinline></video>
+    </div>
+  
+        <!-- The core Firebase JS SDK is always required and must be listed first -->
+<script src="https://www.gstatic.com/firebasejs/8.4.1/firebase-app.js"></script>
+
+<!-- TODO: Add SDKs for Firebase products that you want to use
+     https://firebase.google.com/docs/web/setup#available-libraries -->
+<!--script src="https://www.gstatic.com/firebasejs/8.4.1/firebase-analytics.js"></script-->
+  <script src="https://www.gstatic.com/firebasejs/8.4.1/firebase-firestore.js"></script>
+
+<script>
+  // Your web app's Firebase configuration
+  // For Firebase JS SDK v7.20.0 and later, measurementId is optional
+  var firebaseConfig = {
+    apiKey: "AIzaSyCm5hdQ6FXF31SOnikdL7ArfuDpoZ35ZpU",
+    authDomain: "videocall-78cd1.firebaseapp.com",
+    databaseURL: "https://videocall-78cd1-default-rtdb.firebaseio.com",
+    projectId: "videocall-78cd1",
+    storageBucket: "videocall-78cd1.appspot.com",
+    messagingSenderId: "298290475637",
+    appId: "1:298290475637:web:98116fe303514033cabe3c",
+    measurementId: "G-KM9NZPJD05"
+  };
+  
+  // Initialize Firebase
+    firebase.initializeApp(firebaseConfig);
+
+    let firestore = firebase.firestore();
+  /*
+  // Initialize Firebase
+  firebase.initializeApp(firebaseConfig);
+  //firebase.analytics();
+  firebase.firestore();
+  
+  if (!firebase.apps.length) {
+  firebase.initializeApp(firebaseConfig);
+}
+const firestore = firebase.firestore();
+  */
+</script>
+
+    <!-- The core Firebase JS SDK is always required and must be listed first >
+    <script src="https://www.gstatic.com/firebasejs/8.0.1/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.0.1/firebase-firestore.js"></script>
+    <script>
+    // Your web app's Firebase configuration
+    // For Firebase JS SDK v7.20.0 and later, measurementId is optional
+    var firebaseConfig = {
+        apiKey: "",
+        authDomain: "",
+        databaseURL: "",
+        projectId: "",
+        storageBucket: "",
+        messagingSenderId: "",
+        appId: "",
+        measurementId: ""
+    };
+    // Initialize Firebase
+    firebase.initializeApp(firebaseConfig);
+
+    let firestore = firebase.firestore();
+    </script-->
+    <script src="index.js"></script>
+    <script src="functions/openButtonFunc.js"></script>
+    <script src="functions/createButtonFunc.js"></script>
+    <script src="functions/joinButtonFunc.js"></script>
+    <script src="functions/hangupButtonFunc.js"></script>
+    <script src="events.js"></script>
+</body>
+</html>
