@@ -13,16 +13,14 @@ peerConnection.onconnectionstatechange = ev => {
       break;
     case "disconnected":
       console.log("Disconnecting...");
-
-hangupButtonFunc();
-openButtonFunc();
-
       break;
     case "closed":
       console.log("Offline");
       break;
     case "failed":
       console.log("Error");
+      await document.location.reload(true);
+      openButtonFunc();
       break;
     default:
       console.log("Unknown");
