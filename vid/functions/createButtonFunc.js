@@ -82,5 +82,5 @@ const createButtonFunc = async () => {
         if(connectionState === "disconnected"){
             hangupButtonFunc();
         }
-      }
+      });
 }
