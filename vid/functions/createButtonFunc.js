@@ -77,10 +77,10 @@ const createButtonFunc = async () => {
           unsubscribe();
           unsubscribe2();
       }
-
+/*
       peerConnection.addEventListener("connectionState", event => {
         if(connectionState == "disconnected"){
             hangupButtonFunc();
         }
-      });
+      });*/
 }
