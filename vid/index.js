@@ -16,10 +16,10 @@ let openButton = document.getElementById("open");
 let createButton = document.getElementById("create");
 let joinButton = document.getElementById("join");
 let hangupButton = document.getElementById("hangup");
-
+/*
 createButton.disabled = true;
 joinButton.disabled = true;
-hangupButton.disabled = true;
+hangupButton.disabled = true;*/
 
 // Reference to the Video Tags
 let localVideo = document.getElementById("localVideo");
