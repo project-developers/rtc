@@ -10,6 +10,7 @@
 let peerConnection;
 //let remoteConnection;
 let dataChannel;
+let dataChannel2;
 //let receiveChannel;
 let fileReader;
 const bitrateDiv = document.querySelector('div#bitrate');
@@ -22,7 +23,7 @@ const sendProgress = document.querySelector('progress#sendProgress');
 const receiveProgress = document.querySelector('progress#receiveProgress');
 const statusMessage = document.querySelector('span#status');
 const sendFileButton = document.querySelector('button#sendFile');
-//const retryButton = document.querySelector('button#retry');
+const retryButton = document.querySelector('button#retry');
 const errorMessage = document.querySelector('div#errorMsg');
 let receiveBuffer = [];
 let receivedSize = 0;
@@ -33,6 +34,7 @@ let statsInterval = null;
 let bitrateMax = 0;
 let sending = 0;
 let pacer = 0;
+
 sendFileButton.addEventListener('click', () => createConnection());
 fileInput.addEventListener('change', handleFileInputChange, false);
 abortButton.addEventListener('click', () => {
@@ -50,6 +52,7 @@ async function handleFileInputChange() {
     sendFileButton.disabled = false;
   }
 }
+
 async function createConnection() {
   abortButton.disabled = false;
   sendFileButton.disabled = true;
@@ -60,9 +63,10 @@ async function createConnection() {
     dataChannel.close();
 	dataChannel = null;
 	//sendChannel = localConnection.createDataChannel('sendDataChannel');
-	dataChannel = peerConnection.createDataChannel('sendDataChannel', {maxPacketLifeTime: 32768}); //, {maxRetransmits: 1048576});
+	dataChannel = peerConnection.createDataChannel('sendDataChannel', {maxPacketLifeTime: 32768}); //, {negotiated: true, id: 0}); //, {maxRetransmits: 1048576});
 	dataChannel.binaryType = 'arraybuffer';
   //console.log('Created send data channel');
+	dataChannel.onmessage = onReceiveMessageCallback;
 	dataChannel.onopen = ondataChannelStateChange;
 	dataChannel.onclose = ondataChannelStateChange;
 	dataChannel.error = onError;
@@ -72,6 +76,32 @@ async function createConnection() {
     sendData();
   };
 }
+
+async function createConnection2() {
+  abortButton.disabled = false;
+  sendFileButton.disabled = true;
+  
+  if (dataChannel2.readyState == "open") {
+      sendData2();
+  }else if(dataChannel2 && peerConnection){
+    dataChannel2.close();
+	dataChannel2 = null;
+	//sendChannel = localConnection.createDataChannel('sendDataChannel');
+	dataChannel2 = peerConnection.createDataChannel('sendDataChannel2', {maxPacketLifeTime: 32768}); //, {negotiated: true, id: 1}); //, {maxRetransmits: 1048576});
+	dataChannel2.binaryType = 'arraybuffer';
+  //console.log('Created send data channel');
+	dataChannel2.onmessage = onReceiveMessageCallback;
+	dataChannel2.onopen = ondataChannelStateChange2;
+	dataChannel2.onclose = ondataChannelStateChange2;
+	dataChannel2.error = onError2;
+    sendData2();
+  }else{
+    clickcreateoffer();
+    sendData2();
+  };
+}
+
+
 function sendData() {
   const file = fileInput.files[0];
   statusMessage.textContent = '';
@@ -117,6 +147,7 @@ function sendData() {
 	    //await sleep(5);
     }else{
 	    pacer = 0;
+	    sendProgress.value = 0;
     }
   };
   
@@ -128,7 +159,69 @@ function sendData() {
 	  });
   };
   readSlice(0);
+	
 }
+
+function sendData2() {
+  const file = fileInput.files[0];
+  statusMessage.textContent = '';
+  //downloadAnchor.textContent = '';
+  if (file.size === 0) {
+    bitrateDiv.innerHTML = '';
+    statusMessage.textContent = 'File is empty, please select a non-empty file';
+     return;
+  }
+	
+  pacer = 1;
+  sendProgress.max = file.size;
+  var details = `${[file.name, file.size, file.type, file.lastModified].join('~')}`;
+  
+  const chunkSize = 16430;
+  fileReader = new FileReader();
+  let offset = 0;
+  dataChannel2.send(details);
+  
+  fileReader.addEventListener('error', error => console.error('Error reading file:', error));
+  fileReader.addEventListener('abort', event => console.log('File reading aborted:', event));
+  fileReader.addEventListener('load', sendChunk);
+                              
+    async function sendChunk(event) {
+    //console.log('FileRead.onload ', e);   
+	   await sleep(1);
+    dataChannel2.send(event.target.result);
+     
+	//pacer += 1;
+	    
+	    await sleep(1);
+	/*
+    if (pacer == 1024){
+		await sleep(50);
+		buffer();
+		pacer = 0;
+	}
+	*/
+    offset += event.target.result.byteLength;
+    sendProgress.value = offset;
+    if (offset < file.size) {
+      readSlice(offset);
+	    //await sleep(5);
+    }else{
+	    pacer = 0;
+  	    sendProgress.value = 0;
+    }
+  };
+  
+  async function readSlice(offsetValue) {
+      //console.log('readSlice ', o);
+	  return new Promise(resolve => {
+		  const slice = file.slice(offset, (offsetValue + chunkSize));
+		  resolve(fileReader.readAsArrayBuffer(slice));
+	  });
+  };
+  readSlice(0);
+	
+}
+
 async function buffer(){
 	//console.log('buffering');
     return new Promise(resolve => {
@@ -136,14 +229,34 @@ async function buffer(){
 		dataChannel.close();
 	    dataChannel = null;
 	    };
-		dataChannel = peerConnection.createDataChannel('sendDataChannel', {maxPacketLifeTime: 32768}); //, {maxRetransmits: 1048576});
-	    dataChannel.binaryType = 'arraybuffer';
+dataChannel = peerConnection.createDataChannel('sendDataChannel', {maxPacketLifeTime: 32768}); //, {negotiated: true, id: 0}); //, {maxRetransmits: 1048576});
+	dataChannel.binaryType = 'arraybuffer';
   //console.log('Created send data channel');
+	dataChannel.onmessage = onReceiveMessageCallback;
 	dataChannel.onopen = ondataChannelStateChange;
 	dataChannel.onclose = ondataChannelStateChange;
 	dataChannel.error = onError;
 	})
   }
+
+async function buffer2(){
+	//console.log('buffering');
+    return new Promise(resolve => {
+	    if (dataChannel2) {
+		dataChannel2.close();
+	    dataChannel2 = null;
+	    };
+dataChannel2 = peerConnection.createDataChannel('sendDataChannel', {maxPacketLifeTime: 32768}); //, {negotiated: true, id: 1}); //, {maxRetransmits: 1048576});
+	dataChannel2.binaryType = 'arraybuffer';
+  //console.log('Created send data channel');
+	dataChannel2.onmessage = onReceiveMessageCallback;
+	dataChannel2.onopen = ondataChannelStateChange2;
+	dataChannel2.onclose = ondataChannelStateChange2;
+	dataChannel2.error = onError2;
+	})
+  }
+
+
 function retry() {
 	
 	buffer();
@@ -151,6 +264,16 @@ function retry() {
 	handling();
 	
 }
+
+function retry2() {
+	
+	buffer2();
+	
+	handling2();
+	
+}
+
+
 const sleep = (milliseconds) => {
 	//console.log('sleeping');
   return new Promise(resolve => setTimeout(resolve, milliseconds))
@@ -163,14 +286,34 @@ async function handling(){
 		dataChannel.close();
 	    dataChannel = null;
 	    };
-	peerConnection.ondatachannel = dataChannelCallback;
-	    dataChannel = event.channel;
-	    dataChannel.binaryType = 'arraybuffer';
-	    dataChannel.onmessage = onReceiveMessageCallback;
-	    dataChannel.onopen = onReceiveChannelStateChange;
-	    dataChannel.onclose = onReceiveChannelStateChange;
+	dataChannel = event.channel;
+	dataChannel.binaryType = 'arraybuffer';
+  //console.log('Created send data channel');
+	dataChannel.onmessage = onReceiveMessageCallback;
+	dataChannel.onopen = ondataChannelStateChange;
+	dataChannel.onclose = ondataChannelStateChange;
+	dataChannel.error = onError;
 	})
   }
+
+async function handling2(){
+	//console.log('buffering');
+    return new Promise(resolve => {
+	    
+	    if (dataChannel2) {
+		dataChannel2.close();
+	    dataChannel2 = null;
+	    };
+	dataChannel2 = event.channel;
+	dataChannel2.binaryType = 'arraybuffer';
+  //console.log('Created send data channel');
+	dataChannel2.onmessage = onReceiveMessageCallback;
+	dataChannel2.onopen = ondataChannelStateChange2;
+	dataChannel2.onclose = ondataChannelStateChange2;
+	dataChannel2.error = onError2;
+	})
+  }
+
 function closeDataChannels() {
   console.log('Closing data channels');
   if (dataChannel) {
@@ -180,10 +323,10 @@ function closeDataChannels() {
   peerConnection.close();
   peerConnection = null;
   }
-  if (dataChannel) {
-    dataChannel.close();
-    console.log(`Closed data channel with label: ${dataChannel.label}`);
-    dataChannel = null;
+  if (dataChannel2) {
+    dataChannel2.close();
+    console.log(`Closed data channel with label: ${dataChannel2.label}`);
+    dataChannel2 = null;
     peerConnection.close();
     peerConnection = null;
   }
@@ -192,8 +335,9 @@ function closeDataChannels() {
   // re-enable the file select
   fileInput.disabled = false;
   abortButton.disabled = true;
-  sendFileButton.disabled = false;
+  document.querySelector('button#sendFile').disabled = false;
 }
+
 async function gotLocalDescription(desc) {
   await peerConnection.setLocalDescription(desc);
   console.log(`Offer from localConnection\n ${desc.sdp}`);
@@ -210,6 +354,7 @@ async function gotRemoteDescription(desc) {
   console.log(`Answer from remoteConnection\n ${desc.sdp}`);
   await peerConnection.setRemoteDescription(desc);
 }
+
 function dataChannelCallback(event) {
   //console.log('Receive Channel Callback');
   
@@ -230,6 +375,28 @@ function dataChannelCallback(event) {
 	  }*/
   }
 }
+
+function dataChannelCallback2(event) {
+  //console.log('Receive Channel Callback');
+  
+  dataChannel2 = event.channel;
+  dataChannel2.binaryType = 'arraybuffer';
+  dataChannel2.onmessage = onReceiveMessageCallback;
+  dataChannel2.onopen = onReceiveChannelStateChange2;
+  dataChannel2.onclose = onReceiveChannelStateChange2;
+  if(sending == 0){
+	  receivedSize = 0;
+	  bitrateMax = 0;
+	  //downloadAnchor.textContent = '';
+	  bitrateDiv.innerHTML = '';
+	  /*downloadAnchor.removeAttribute('download');
+	  if (downloadAnchor.href) {
+		URL.revokeObjectURL(downloadAnchor.href);
+		downloadAnchor.removeAttribute('href');
+	  }*/
+  }
+}
+
 async function onReceiveMessageCallback(event) {
  
   //sending = 1;
@@ -287,9 +454,10 @@ async function onReceiveMessageCallback(event) {
     receivedSize = 0;
     parts.length = 0;
     info = '';
+	  receiveProgress.value = receivedSize;
 	sending = 0;
-	URL.revokeObjectURL(downloadAnchor.href);
-	downloadAnchor.removeAttribute('href');
+	//URL.revokeObjectURL(downloadAnchor.href);
+	//downloadAnchor.removeAttribute('href');
   }
 }
 
@@ -314,6 +482,29 @@ async function ondataChannelStateChange() {
 }
 
 }
+
+async function ondataChannelStateChange2() {
+	if(sending == 0){
+  if (dataChannel2) {
+    const {readyState} = dataChannel2;
+    console.log(`Send channel state is: ${readyState}`);
+    if (readyState === 'open') {
+      chatlog('Connected');
+		  timestampStart = (new Date()).getTime();
+		  timestampPrev = timestampStart;
+		  statsInterval = setInterval(displayStats, 500);
+		  await displayStats();
+    }else{
+      chatlog('Disconnected');
+	    if(pacer == 1){buffer2()};
+    }
+    if(pacer == 1){buffer2()};
+  }
+	if(pacer == 1){buffer2()};
+}
+
+}
+
 function onError(error) {
   if (dataChannel) {
     console.error('Error in sendChannel:', error);
@@ -322,6 +513,16 @@ function onError(error) {
   console.log('Error in sendChannel which is already closed:', error);
 	if(pacer == 1){buffer()};
 }
+
+function onError2(error) {
+  if (dataChannel2) {
+    console.error('Error in sendChannel:', error);
+    return;
+  }
+  console.log('Error in sendChannel which is already closed:', error);
+	if(pacer == 1){buffer2()};
+}
+
 async function onReceiveChannelStateChange() {
 	if(sending == 0){
 	  if (dataChannel) {
@@ -333,9 +534,7 @@ async function onReceiveChannelStateChange() {
 		  timestampPrev = timestampStart;
 		  statsInterval = setInterval(displayStats, 500);
 		  await displayStats();
-		}
-	  }
-	}
+	
     }else{
       chatlog('Disconnected');
 	    if(pacer == 1){buffer()};
@@ -343,6 +542,28 @@ async function onReceiveChannelStateChange() {
     if(pacer == 1){buffer()};
   }
 	if(pacer == 1){buffer()};
+}
+}
+
+async function onReceiveChannelStateChange2() {
+	if(sending == 0){
+	  if (dataChannel2) {
+		const readyState = dataChannel2.readyState;
+		console.log(`Receive channel state is: ${readyState}`);
+		if (readyState === 'open') {
+			chatlog('Connected');
+		  timestampStart = (new Date()).getTime();
+		  timestampPrev = timestampStart;
+		  statsInterval = setInterval(displayStats, 500);
+		  await displayStats();
+	
+    }else{
+      chatlog('Disconnected');
+	    if(pacer == 1){buffer2()};
+    }
+    if(pacer == 1){buffer2()};
+  }
+	if(pacer == 1){buffer2()};
 }
 }
 
