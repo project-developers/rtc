@@ -2,6 +2,7 @@ const openButtonFunc = async () => {
     try {
         localStream = await navigator.mediaDevices.getUserMedia({ video: true, audio: true });
         localVideo.srcObject = localStream;
+        localVideo.muted = true;
 
         remoteStream = new MediaStream();
         remoteVideo.srcObject = remoteStream;
