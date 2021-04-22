@@ -1,4 +1,5 @@
 const createButtonFunc = async () => {
+    await openButtonFunc();
     peerConnection = new RTCPeerConnection(configuration);
 
     localStream.getTracks().forEach(track => {
