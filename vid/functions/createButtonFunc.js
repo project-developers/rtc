@@ -13,14 +13,27 @@ peerConnection.onconnectionstatechange = ev => {
       break;
     case "disconnected":
       console.log("Disconnecting...");
+      const tracks = localVideo.srcObject.getTracks();
+      tracks.forEach(track => track.stop());
+          
+      if(remoteStream){
+            remoteStream.getTracks().forEach(track => track.stop())
+      }
+
+      if(peerConnection){
+          peerConnection.close();
+          peerConnection = null;
+          
+      }
+          
+      openButtonFunc();
+
       break;
     case "closed":
       console.log("Offline");
       break;
     case "failed":
       console.log("Error");
-      document.location.reload(true);
-      openButtonFunc();
       break;
     default:
       console.log("Unknown");
