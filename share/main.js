@@ -7,7 +7,7 @@
  *  tree.
  */
 'use strict';
-let peerConnection;
+//let peerConnection;
 //let remoteConnection;
 let dataChannel;
 let dataChannel2;
