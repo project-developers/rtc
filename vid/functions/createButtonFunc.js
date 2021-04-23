@@ -87,7 +87,7 @@ peerConnection.onconnectionstatechange = ev => {
        // Listening for remote session description above
 
        // Listen for remote ICE candidates below
-       let unsubscribe2 = roomRef.collection('calleeCandidates').onSnapshot(snapshot => {
+       let unsubscribe2 = roomRef.collection('callerCandidates').onSnapshot(snapshot => {
         snapshot.docChanges().forEach(async change => {
           if (change.type === 'added') {
             let data = change.doc.data();
