@@ -14,8 +14,8 @@ peerConnection.onconnectionstatechange = ev => {
     case "disconnected":
       console.log("Disconnecting...");
           
-          unsubscribe();
-          unsubscribe2();
+          //unsubscribe();
+          //unsubscribe2();
 
 //createButtonFunc();
 
