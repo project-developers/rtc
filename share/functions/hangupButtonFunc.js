@@ -24,11 +24,12 @@ const hangupButtonFunc = async () => {
         await roomRef.delete();
     }
     //Delete a room on hangup above
-
+/*
     openButton.disabled = false;
     createButton.disabled = true;
     joinButton.disabled = true;
     hangupButton.disabled = true;
 
     //document.location.reload(true);
+    */
 }
