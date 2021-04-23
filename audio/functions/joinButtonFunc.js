@@ -63,6 +63,8 @@ peerConnection.onconnectionstatechange = ev => {
         const answer = await peerConnection.createAnswer();
         //   console.log('Created answer:', answer);
         await peerConnection.setLocalDescription(answer);
+        
+        answer.sdp = await setMediaBitrates(answer.sdp);
 
         const roomWithAnswer = {
           answer: {
