@@ -15,6 +15,18 @@ peerConnection.onconnectionstatechange = ev => {
       break;
     case "disconnected":
       console.log("Disconnecting...");
+      // Listening for remote ICE candidates below
+        let unsubscribe = roomRef.collection('callerCandidates').onSnapshot(snapshot => {
+        snapshot.docChanges().forEach(async change => {
+            if (change.type === 'added') {
+            let data = change.doc.data();
+            // console.log(`Got new remote ICE candidate: ${JSON.stringify(data)}`);
+            await peerConnection.addIceCandidate(new RTCIceCandidate(data));
+            }
+        });
+        });
+        // Listening for remote ICE candidates 
+
       unsubscribe();
       //document.location.reload(true);
       break;
