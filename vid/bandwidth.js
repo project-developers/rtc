@@ -1,4 +1,4 @@
-function setMediaBitrates(sdp) {
+async function setMediaBitrates(sdp) {
   return setMediaBitrate(setMediaBitrate(sdp, "video", 500), "audio", 50);
 }
 
