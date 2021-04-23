@@ -37,14 +37,14 @@ peerConnection.onconnectionstatechange = ev => {
         })
 
         // Code for collecting ICE candidates below
-        const callerCandidatesCollection = roomRef.collection("callerCandidates");
+        const calleeCandidatesCollection = roomRef.collection("calleeCandidates");
         peerConnection.addEventListener("icecandidate", event => {
           if(!event.candidate){
             // console.log('Got final candidate!');
             return;
           }
           // console.log('Got candidate: ', event.candidate);
-          callerCandidatesCollection.add(event.candidate.toJSON());
+          calleeCandidatesCollection.add(event.candidate.toJSON());
         })
         // Code for collecting ICE candidates above
 
