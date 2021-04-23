@@ -1,7 +1,7 @@
 const joinButtonFunc = async () => {
     await openButtonFunc();
-    //roomId = prompt("Enter a Room Id");
-    roomId = "bok";
+    roomId = prompt("Enter a Caller Id");
+    //roomId = "bok";
 
     peerConnection = new RTCPeerConnection(configuration);
 
