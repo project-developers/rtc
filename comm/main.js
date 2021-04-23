@@ -31,8 +31,8 @@ const callInput = document.getElementById('callInput');
 const answerButton = document.getElementById('answerButton');
 const remoteVideo = document.getElementById('remoteVideo');
 const hangupButton = document.getElementById('hangupButton');
-let callerId = Teo;
-let callId = Teo;
+let callerId = "Teo";
+let callId = "Teo";
 
 //callerId = prompt('Please enter your ID','');
 hangupButton.onclick = hangup;
