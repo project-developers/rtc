@@ -30,5 +30,5 @@ const hangupButtonFunc = async () => {
     joinButton.disabled = true;
     hangupButton.disabled = true;
 
-    document.location.reload(true);
+    //document.location.reload(true);
 }
