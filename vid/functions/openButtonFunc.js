@@ -5,6 +5,9 @@ const openButtonFunc = async () => {
         localStream = await navigator.mediaDevices.getUserMedia({ video: true, audio: true });
         localVideo.srcObject = localStream;
         localVideo.muted = true;
+        var video1 = document.createElement('video');
+        video1.srcObject = localStream;
+        video1.autoplay = true;
         //videos.appendChild(localVideo);
         }
         
