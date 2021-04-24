@@ -1,6 +1,7 @@
 let localStream;
 let remoteStream;
-let roomId;
+let roomId = '';
+let callerId = '';
 let roomIdData = [];
 let peerConnection;
 
