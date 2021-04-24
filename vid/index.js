@@ -27,14 +27,14 @@ hangupButton.disabled = true;*/
 // Reference to the Video Tags
 
 let localVideo = document.createElement('video'); //getElementById("localVideo");
-let remoteVideo = document.createElement('video'); //getElementById("remoteVideo");
-//remoteVideo = createElement('video');
+let remoteVideo = []; //document.createElement('video'); //getElementById("remoteVideo");
+remoteVideo[0] = document.createElement('video');
 let videos = document.getElementById("videos");
 //var video1 = document.createElement('video');
 localVideo.autoplay = true;
 localVideo.muted = true;
 localVideo.setAttribute("playsinline",null);
 //var video2 = document.createElement('video');
-remoteVideo.autoplay = true;
-remoteVideo.muted = true;
-remoteVideo.setAttribute("playsinline",null);
+remoteVideo[0].autoplay = true;
+remoteVideo[0].muted = true;
+remoteVideo[0].setAttribute("playsinline",null);
