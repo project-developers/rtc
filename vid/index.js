@@ -1,5 +1,6 @@
 let localStream;
-let remoteStream;
+let remoteStream = [];
+let k = remoteStream.length;
 let roomId = '';
 let callerId = '';
 let roomIdData = [];
