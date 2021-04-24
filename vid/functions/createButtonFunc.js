@@ -38,15 +38,14 @@ peerConnection.onconnectionstatechange = ev => {
     const callerCandidatesCollection = roomRef.collection("callerCandidates");
     const participants = roomRef.collection("participants");
     
+    let participantId = "participant" + (i + 1);
+    
     const data = {
-  name: 'Los Angeles',
-  state: 'CA',
-  country: 'USA'
+  name: participantId,
+  status: 'connected'
 };
 
-var participantId = "participant" + (i + 1);
-// Add a new document in collection "cities" with ID 'LA'
-const res = await roomRef.collection('participants').doc(participantId).set(data);
+await roomRef.collection('participants').doc(participantId).set(data);
 
     peerConnection.addEventListener("icecandidate", event => {
       if(!event.candidate){
