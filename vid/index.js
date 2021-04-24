@@ -24,8 +24,9 @@ joinButton.disabled = true;
 hangupButton.disabled = true;*/
 
 // Reference to the Video Tags
-let localVideo = document.getElementById("localVideo");
-let remoteVideo = document.getElementById("remoteVideo");
+
+let localVideo = document.createElement("video"); //getElementById("localVideo");
+let remoteVideo = document.createElement("video"); //getElementById("remoteVideo");
 
 /*
 function setMediaBitrates(sdp) {
