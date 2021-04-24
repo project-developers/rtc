@@ -97,9 +97,6 @@ peerConnection.onconnectionstatechange = ev => {
             // console.log(`Got new remote ICE candidate: ${JSON.stringify(data)}`);
             await peerConnection.addIceCandidate(new RTCIceCandidate(data));
           }
-        })
-            .catch(err => {
-            console.log(err); // TypeError: failed to fetch
         });
       });
       // Listen for remote ICE candidates above
