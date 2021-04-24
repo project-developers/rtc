@@ -2,6 +2,7 @@ const openButtonFunc = async () => {
     try {
         if(videos.innerHTML == ''){
         //videos.appendChild(localVideo);
+            /*
         const videoConstraint = {
             audio: true,
             video: {
@@ -9,9 +10,14 @@ const openButtonFunc = async () => {
                 height: 120,
                 framerate: 15
             }
-        }
+        }*/
+        
+        const offerOptions = {
+            offerToReceiveAudio: 1,
+            offerToReceiveVideo: 1
+        };
 
-        localStream = await navigator.mediaDevices.getUserMedia(videoConstraint); //{width: auto, height: 480}});
+        localStream = await navigator.mediaDevices.getUserMedia({ video: true, audio: true }); //{width: auto, height: 480}});
         //localVideo.srcObject = localStream;
         //localVideo.muted = true;
         //var video1 = document.createElement('video');
