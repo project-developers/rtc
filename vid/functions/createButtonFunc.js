@@ -38,15 +38,15 @@ peerConnection.onconnectionstatechange = ev => {
     const callerCandidatesCollection = roomRef.collection("callerCandidates");
     const participants = roomRef.collection("participants");
     
-    participantId = "participant" + (i + 1);
-    
     const data = {
-  name: participantId,
-  status: 'connected'
-};
-
-await roomRef.collection('participants').doc(participantId).set(data);
-
+        participantId: participants.id,
+        status: 'connected'
+    };
+    
+    await roomRef.collection('participants').doc().set(data);
+    
+    participantId = participants.id;
+        
     peerConnection.addEventListener("icecandidate", event => {
       if(!event.candidate){
        //  console.log("Got Final Candidate!");
