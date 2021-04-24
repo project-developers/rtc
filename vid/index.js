@@ -1,6 +1,6 @@
 let localStream;
-let remoteStream = [];
-let k = remoteStream.length;
+let remoteStream; // = [];
+//let k = remoteStream.length;
 let roomId = '';
 let callerId = '';
 let roomIdData = [];
@@ -33,6 +33,8 @@ let remoteVideo = []; //document.createElement('video'); //getElementById("remot
 let i = remoteVideo.length;
 
 remoteVideo[i] = document.createElement('video');
+
+remoteVideo.push(remoteVideo[i]);
 
 let videos = document.getElementById("videos");
 //var video1 = document.createElement('video');
