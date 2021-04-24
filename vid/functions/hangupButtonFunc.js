@@ -9,6 +9,9 @@ const hangupButtonFunc = async () => {
     videos.innerHTML = '';
     roomId = '';
     callerId = '';
+    i = 0;
+    j = 0;
+    k = 0;
 
     if(peerConnection){
         peerConnection.close();
