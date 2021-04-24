@@ -8,7 +8,7 @@ const openButtonFunc = async () => {
         var video1 = document.createElement('video');
         video1.srcObject = localStream;
         video1.autoplay = true;
-        //videos.appendChild(localVideo);
+        videos.appendChild(video1);
         }
         
         //videos.appendChild(remoteVideo);
