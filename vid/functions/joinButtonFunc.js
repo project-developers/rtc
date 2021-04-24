@@ -91,7 +91,7 @@ peerConnection.onconnectionstatechange = ev => {
         // Listening for remote ICE candidates 
         
         i++;
-        j++;
+        //j++;
         k++;
 
         return () => unsubscribe();
