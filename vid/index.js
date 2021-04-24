@@ -6,6 +6,7 @@ let callerId = '';
 let roomIdData = [];
 let peerConnection; // = [];
 //let j = peerConnection.length;
+let participantId;
 
 let configuration = {
     'iceServers': [
