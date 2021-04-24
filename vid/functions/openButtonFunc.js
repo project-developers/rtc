@@ -17,11 +17,11 @@ const openButtonFunc = async () => {
         remoteStream = new MediaStream();
         //remoteVideo.srcObject = remoteStream;
         //var video2 = document.createElement('video');
-        remoteVideo[0].srcObject = remoteStream;
+        remoteVideo[i].srcObject = remoteStream;
         /*video2.autoplay = true;
         video2.muted = true;
         video2.setAttribute("playsinline",null);*/
-        videos.appendChild(remoteVideo[0]);
+        videos.appendChild(remoteVideo[i]);
         //videos.appendChild(remoteVideo);
 
         openButton.disabled = true;
