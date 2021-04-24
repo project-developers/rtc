@@ -1,5 +1,5 @@
 async function setMediaBitrates(sdp) {
-  return setMediaBitrate(setMediaBitrate(sdp, "video", 200), "audio", 50);
+  return setMediaBitrate(setMediaBitrate(sdp, "video", 500), "audio", 100);
 }
 
 function setMediaBitrate(sdp, media, bitrate) {
