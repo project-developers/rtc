@@ -5,6 +5,8 @@ const hangupButtonFunc = async () => {
     if(remoteStream){
         remoteStream.getTracks().forEach(track => track.stop())
     }
+    
+    videos.innerHTML = '';
 
     if(peerConnection){
         peerConnection.close();
