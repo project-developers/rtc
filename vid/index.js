@@ -32,7 +32,7 @@ let localVideo = document.createElement('video'); //getElementById("localVideo")
 let remoteVideo = []; //document.createElement('video'); //getElementById("remoteVideo");
 let i = remoteVideo.length;
 
-remoteVideo[i] = document.createElement('video');
+//remoteVideo[i] = document.createElement('video');
 
 //remoteVideo.push(remoteVideo[i]);
 
@@ -40,8 +40,8 @@ let videos = document.getElementById("videos");
 //var video1 = document.createElement('video');
 localVideo.autoplay = true;
 localVideo.muted = true;
-localVideo.setAttribute("playsinline",null);
+localVideo.setAttribute("playsinline",null);/*
 //var video2 = document.createElement('video');
 remoteVideo[i].autoplay = true;
 remoteVideo[i].muted = true;
-remoteVideo[i].setAttribute("playsinline",null);
+remoteVideo[i].setAttribute("playsinline",null);*/
