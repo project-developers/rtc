@@ -89,6 +89,10 @@ peerConnection[j].onconnectionstatechange = ev => {
         });
         });
         // Listening for remote ICE candidates 
+        
+        i++;
+        j++;
+        k++;
 
         return () => unsubscribe();
             //document.getElementById("videos").appendChild(remoteVideo);
