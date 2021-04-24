@@ -3,7 +3,7 @@ const createButtonFunc = async () => {
     peerConnection = new RTCPeerConnection(configuration);
     
     localStream.getTracks().forEach(track => {
-        await peerConnection.addTrack(track, localStream)
+        peerConnection.addTrack(track, localStream)
     })
 
 peerConnection.onconnectionstatechange = ev => {
