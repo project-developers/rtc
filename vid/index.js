@@ -8,7 +8,7 @@ let peerConnection; // = [];
 //let j = peerConnection.length;
 let participantId;
 
-let configuration = {
+const configuration = {
   'iceServers': [
       {'urls': 'stun:stun.services.mozilla.com'},
       {'urls': 'stun:stun.l.google.com:19302'},
