@@ -2,7 +2,16 @@ const openButtonFunc = async () => {
     try {
         if(videos.innerHTML == ''){
         //videos.appendChild(localVideo);
-        localStream = await navigator.mediaDevices.getUserMedia({ audio: true, video: true}); //{width: auto, height: 480}});
+        const videoConstraint = {
+            audio: true,
+            video: {
+                width: 640,
+                height: 480,
+                facingMode: "environment"
+            }
+        }
+
+        localStream = await navigator.mediaDevices.getUserMedia(videoConstraint); //{width: auto, height: 480}});
         //localVideo.srcObject = localStream;
         //localVideo.muted = true;
         //var video1 = document.createElement('video');
