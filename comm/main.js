@@ -190,5 +190,7 @@ answerButton.onclick = async () => {
   });
 };
   
-
+function hangup() {
+  
+  };
 
