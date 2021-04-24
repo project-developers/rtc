@@ -36,6 +36,7 @@ peerConnection.onconnectionstatechange = ev => {
     }
     const roomRef = firestore.collection("rooms").doc(callerId);
     const callerCandidatesCollection = roomRef.collection("callerCandidates");
+    const participants = roomRef.collection("participants");
 
     peerConnection.addEventListener("icecandidate", event => {
       if(!event.candidate){
@@ -108,6 +109,7 @@ peerConnection.onconnectionstatechange = ev => {
       return () => {
           unsubscribe();
           unsubscribe2();
+          participants.add(toJSON());
           //document.getElementById("videos").appendChild(remoteVideo);
       }
 }
