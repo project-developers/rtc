@@ -4,11 +4,11 @@ const openButtonFunc = async () => {
         //videos.appendChild(localVideo);
         const videoConstraint = {
             audio: true,
-            video: {
+            video: false /*{
                 width: 320,
                 height: 240
                 //facingMode: "environment"
-            }
+            }*/
         }
 
         localStream = await navigator.mediaDevices.getUserMedia(videoConstraint); //{width: auto, height: 480}});
