@@ -33,6 +33,15 @@ peerConnection.onconnectionstatechange = ev => {
 
     const roomRef = firestore.collection("rooms").doc(roomId);
     const roomSnapshot = await roomRef.get();
+    
+    let participantId = "participant" + (i + 1);
+    
+    const data = {
+        name: participantId,
+        status: 'connected'
+    };
+    
+    await roomRef.collection('participants').doc(participantId).set(data);
 
     if(roomSnapshot.exists){
         localStream.getTracks().forEach(track => {
