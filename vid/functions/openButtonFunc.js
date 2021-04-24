@@ -4,12 +4,12 @@ const openButtonFunc = async () => {
         localStream = await navigator.mediaDevices.getUserMedia({ video: true, audio: true });
         localVideo.srcObject = localStream;
         localVideo.muted = true;
-        document.getElementById("videos").appendChild(localVideo);
+        videos.appendChild(localVideo);
         }
         
         remoteStream = new MediaStream();
         remoteVideo.srcObject = remoteStream;
-        document.getElementById("videos").appendChild(remoteVideo);
+        videos.appendChild(remoteVideo);
 
         openButton.disabled = true;
         createButton.disabled = false;
