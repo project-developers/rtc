@@ -1,6 +1,10 @@
 const createButtonFunc = async () => {
     await openButtonFunc();
     peerConnection = new RTCPeerConnection(configuration);
+    
+    localStream.getTracks().forEach(track => {
+        await peerConnection.addTrack(track, localStream)
+    })
 
 peerConnection.onconnectionstatechange = ev => {
   switch(peerConnection.connectionState) {
@@ -25,11 +29,6 @@ peerConnection.onconnectionstatechange = ev => {
       break;
   }
 }
-
-
-    localStream.getTracks().forEach(track => {
-        peerConnection.addTrack(track, localStream)
-    })
 
     // Code for collecting ICE candidates below
     if(callerId == ''){
