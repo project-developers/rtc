@@ -10,7 +10,7 @@ const hangupButtonFunc = async () => {
     roomId = '';
     callerId = '';
     i = 0;
-    j = 0;
+    //j = 0;
     k = 0;
 
     if(peerConnection){
