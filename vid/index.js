@@ -13,7 +13,7 @@ let configuration = {
         {'urls': 'stun:stun.services.mozilla.com'},
         {'urls': 'stun:stun.l.google.com:19302'},
         {'urls': 'turn:numb.viagenie.ca', 'credential': 'Arobibi1', 'username': 'theotek1@gmail.com'},
-        {'urls': 'stun:stun1.l.google.com:19302'},
+       /* {'urls': 'stun:stun1.l.google.com:19302'},
         {'urls': 'stun:stun2.l.google.com:19302'},
         {'urls': 'stun:stun3.l.google.com:19302'},
         {'urls': 'stun:stun4.l.google.com:19302'},
@@ -23,7 +23,7 @@ let configuration = {
         {'urls': 'stun:stun.ideasip.com'},
         {'urls': 'stun:stun.iptel.org'},
         {'urls': 'stun:stun.rixtelecom.se'},
-        {'urls': 'stun:stun.schlund.de'}
+        {'urls': 'stun:stun.schlund.de'}*/
     ]
   }
 
