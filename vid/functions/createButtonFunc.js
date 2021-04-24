@@ -100,6 +100,10 @@ peerConnection[j].onconnectionstatechange = ev => {
         });
       });
       // Listen for remote ICE candidates above
+    
+    i++;
+    j++;
+    k++;
 
       return () => {
           unsubscribe();
