@@ -39,11 +39,6 @@ let callId = "Teo";
 hangupButton.onclick = hangup;
 
 let startTime;
-const localVideo = document.getElementById('localVideo');
-
-localVideo.addEventListener('loadedmetadata', function() {
-  console.log(`Local video videoWidth: ${this.videoWidth}px,  videoHeight: ${this.videoHeight}px`);
-});
 
 remoteVideo.addEventListener('loadedmetadata', function() {
   console.log(`Remote video videoWidth: ${this.videoWidth}px,  videoHeight: ${this.videoHeight}px`);
@@ -88,8 +83,6 @@ webcamButton.onclick = async () => {
 
   webcamVideo.srcObject = localStream;
   webcamVideo.muted = true;
-  localVideo.srcObject = localStream;
-  localVideo.muted = true;
   remoteVideo.srcObject = remoteStream;
 
   callButton.disabled = false;
