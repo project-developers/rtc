@@ -5,10 +5,10 @@ const joinButtonFunc = async () => {
     }
     
 
-    peerConnection[j] = new RTCPeerConnection(configuration);
+    peerConnection = new RTCPeerConnection(configuration);
 
-peerConnection[j].onconnectionstatechange = ev => {
-  switch(peerConnection[j].connectionState) {
+peerConnection.onconnectionstatechange = ev => {
+  switch(peerConnection.connectionState) {
     case "new":
     case "checking":
       console.log("Connecting...");
@@ -36,12 +36,12 @@ peerConnection[j].onconnectionstatechange = ev => {
 
     if(roomSnapshot.exists){
         localStream.getTracks().forEach(track => {
-            peerConnection[j].addTrack(track, localStream)
+            peerConnection.addTrack(track, localStream)
         })
 
         // Code for collecting ICE candidates below
         const calleeCandidatesCollection = roomRef.collection("calleeCandidates");
-        peerConnection[j].addEventListener("icecandidate", event => {
+        peerConnection.addEventListener("icecandidate", event => {
           if(!event.candidate){
             // console.log('Got final candidate!');
             return;
@@ -51,7 +51,7 @@ peerConnection[j].onconnectionstatechange = ev => {
         })
         // Code for collecting ICE candidates above
 
-        peerConnection[j].addEventListener("track", event => {
+        peerConnection.addEventListener("track", event => {
             // console.log('Got remote track:', event.streams[0]);
             event.streams[0].getTracks().forEach(track => {
               // console.log('Add a track to the remoteStream:', track);
@@ -62,10 +62,10 @@ peerConnection[j].onconnectionstatechange = ev => {
         // Code for creating SDP answer below
         const offer = roomSnapshot.data().offer;
         // console.log('Got offer:', offer);
-        await peerConnection[j].setRemoteDescription(new RTCSessionDescription(offer));
-        const answer = await peerConnection[j].createAnswer();
+        await peerConnection.setRemoteDescription(new RTCSessionDescription(offer));
+        const answer = await peerConnection.createAnswer();
         //   console.log('Created answer:', answer);
-        await peerConnection[j].setLocalDescription(answer);
+        await peerConnection.setLocalDescription(answer);
         
         answer.sdp = await setMediaBitrates(answer.sdp);
 
@@ -84,7 +84,7 @@ peerConnection[j].onconnectionstatechange = ev => {
             if (change.type === 'added') {
             let data = change.doc.data();
             // console.log(`Got new remote ICE candidate: ${JSON.stringify(data)}`);
-            await peerConnection[j].addIceCandidate(new RTCIceCandidate(data));
+            await peerConnection.addIceCandidate(new RTCIceCandidate(data));
             }
         });
         });
