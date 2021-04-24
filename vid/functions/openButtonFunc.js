@@ -7,6 +7,7 @@ const openButtonFunc = async () => {
 
         remoteStream = new MediaStream();
         remoteVideo.srcObject = remoteStream;
+        document.getElementById("videos").appendChild(remoteVideo);
 
         openButton.disabled = true;
         createButton.disabled = false;
