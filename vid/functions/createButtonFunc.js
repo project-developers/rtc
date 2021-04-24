@@ -109,7 +109,7 @@ peerConnection.onconnectionstatechange = ev => {
       return () => {
           unsubscribe();
           unsubscribe2();
-          await participants.set("joined");
+          participants.set("joined");
           //document.getElementById("videos").appendChild(remoteVideo);
       }
 }
