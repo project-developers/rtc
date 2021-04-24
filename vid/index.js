@@ -26,17 +26,18 @@ hangupButton.disabled = true;*/
 
 // Reference to the Video Tags
 
-let localVideo = document.getElementById("localVideo"); //createElement("video"); //getElementById("localVideo");
-let remoteVideo = document.getElementById("remoteVideo"); //createElement("video"); //getElementById("remoteVideo");
+let localVideo = createElement('video'); //getElementById("localVideo");
+let remoteVideo = []; //createElement('video'); //getElementById("remoteVideo");
+remoteVideo[0] = createElement('video');
 let videos = document.getElementById("videos");
-var video1 = document.createElement('video');
-video1.autoplay = true;
-video1.muted = true;
-video1.setAttribute("playsinline",null);
-var video2 = document.createElement('video');
-video2.autoplay = true;
-video2.muted = true;
-video2.setAttribute("playsinline",null);
+//var video1 = document.createElement('video');
+localVideo.autoplay = true;
+localVideo.muted = true;
+localVideo.setAttribute("playsinline",null);
+//var video2 = document.createElement('video');
+remoteVideo[0].autoplay = true;
+remoteVideo[0].muted = true;
+remoteVideo[0].setAttribute("playsinline",null);
 /*
 function setMediaBitrates(sdp) {
   return setMediaBitrate(setMediaBitrate(sdp, "video", 500), "audio", 50);
