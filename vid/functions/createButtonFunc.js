@@ -70,7 +70,7 @@ peerConnection[j].onconnectionstatechange = ev => {
         // console.log('Got remote track:', event.streams[0]);
         event.streams[0].getTracks().forEach(track => {
           // console.log('Add a track to the remoteStream:', track);
-          remoteStream.addTrack(track);
+          remoteStream[k].addTrack(track);
         })
        })
 
