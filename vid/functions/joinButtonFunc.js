@@ -84,7 +84,7 @@ peerConnection[j].onconnectionstatechange = ev => {
             if (change.type === 'added') {
             let data = change.doc.data();
             // console.log(`Got new remote ICE candidate: ${JSON.stringify(data)}`);
-            await peerConnection.j].addIceCandidate(new RTCIceCandidate(data));
+            await peerConnection[j].addIceCandidate(new RTCIceCandidate(data));
             }
         });
         });
