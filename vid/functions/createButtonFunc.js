@@ -62,7 +62,7 @@ peerConnection.onconnectionstatechange = ev => {
      const offer = await peerConnection.createOffer();
      await peerConnection.setLocalDescription(offer);
     
-    offer.sdp = await setMediaBitrates(offer.sdp);
+    //offer.sdp = await setMediaBitrates(offer.sdp);
 
      const roomWithOffer = {
        'offer': {
