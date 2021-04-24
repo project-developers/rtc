@@ -32,7 +32,9 @@ peerConnection.onconnectionstatechange = ev => {
     })
 
     // Code for collecting ICE candidates below
-    const callerId = prompt('Please enter room ID','');
+    if(callerId == ''){
+        callerId = prompt('Please enter room ID','');
+    }
     const roomRef = firestore.collection("rooms").doc(callerId);
     const callerCandidatesCollection = roomRef.collection("callerCandidates");
 
