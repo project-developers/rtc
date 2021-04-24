@@ -34,7 +34,7 @@ let i = remoteVideo.length;
 
 remoteVideo[i] = document.createElement('video');
 
-remoteVideo.push(remoteVideo[i]);
+//remoteVideo.push(remoteVideo[i]);
 
 let videos = document.getElementById("videos");
 //var video1 = document.createElement('video');
