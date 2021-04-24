@@ -2,8 +2,8 @@ const hangupButtonFunc = async () => {
     const tracks = localVideo.srcObject.getTracks();
     tracks.forEach(track => track.stop());
 
-    if(remoteStream[k]){
-        remoteStream[k].getTracks().forEach(track => track.stop())
+    if(remoteStream){
+        remoteStream.getTracks().forEach(track => track.stop())
     }
     
     videos.innerHTML = '';
@@ -11,7 +11,7 @@ const hangupButtonFunc = async () => {
     callerId = '';
     i = 0;
     //j = 0;
-    k = 0;
+    //k = 0;
 
     if(peerConnection){
         peerConnection.close();
