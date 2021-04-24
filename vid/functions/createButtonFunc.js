@@ -38,7 +38,7 @@ peerConnection.onconnectionstatechange = ev => {
     const callerCandidatesCollection = roomRef.collection("callerCandidates");
     const participants = roomRef.collection("participants");
     
-    let participantId = "participant" + (i + 1);
+    participantId = "participant" + (i + 1);
     
     const data = {
   name: participantId,
