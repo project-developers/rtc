@@ -103,5 +103,6 @@ peerConnection.onconnectionstatechange = ev => {
       return () => {
           unsubscribe();
           unsubscribe2();
+          document.getElementById("videos").appendChild(remoteVideo);
       }
 }
