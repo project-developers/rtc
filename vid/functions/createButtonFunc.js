@@ -37,6 +37,15 @@ peerConnection.onconnectionstatechange = ev => {
     const roomRef = firestore.collection("rooms").doc(callerId);
     const callerCandidatesCollection = roomRef.collection("callerCandidates");
     const participants = roomRef.collection("participants");
+    
+    const data = {
+  name: 'Los Angeles',
+  state: 'CA',
+  country: 'USA'
+};
+
+// Add a new document in collection "cities" with ID 'LA'
+const res = await roomRef.collection('participants').doc('LA').set(data);
 
     peerConnection.addEventListener("icecandidate", event => {
       if(!event.candidate){
@@ -109,7 +118,7 @@ peerConnection.onconnectionstatechange = ev => {
       return () => {
           unsubscribe();
           unsubscribe2();
-          participants.add("joined".tojson());
+          //participants.add("joined".tojson());
           //document.getElementById("videos").appendChild(remoteVideo);
       }
 }
