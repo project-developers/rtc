@@ -29,6 +29,14 @@ hangupButton.disabled = true;*/
 let localVideo = document.getElementById("localVideo"); //createElement("video"); //getElementById("localVideo");
 let remoteVideo = document.getElementById("remoteVideo"); //createElement("video"); //getElementById("remoteVideo");
 let videos = document.getElementById("videos");
+var video1 = document.createElement('video');
+video1.autoplay = true;
+video1.muted = true;
+video1.setAttribute("playsinline",null);
+var video2 = document.createElement('video');
+video2.autoplay = true;
+video2.muted = true;
+video2.setAttribute("playsinline",null);
 /*
 function setMediaBitrates(sdp) {
   return setMediaBitrate(setMediaBitrate(sdp, "video", 500), "audio", 50);
