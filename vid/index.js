@@ -27,8 +27,8 @@ hangupButton.disabled = true;*/
 // Reference to the Video Tags
 
 let localVideo = createElement('video'); //getElementById("localVideo");
-let remoteVideo = []; //createElement('video'); //getElementById("remoteVideo");
-remoteVideo = createElement('video');
+let remoteVideo = createElement('video'); //getElementById("remoteVideo");
+//remoteVideo = createElement('video');
 let videos = document.getElementById("videos");
 //var video1 = document.createElement('video');
 localVideo.autoplay = true;
