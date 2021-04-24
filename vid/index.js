@@ -27,7 +27,7 @@ hangupButton.disabled = true;*/
 
 let localVideo = document.createElement("video"); //getElementById("localVideo");
 let remoteVideo = document.createElement("video"); //getElementById("remoteVideo");
-
+let videos = document.getElementById("videos");
 /*
 function setMediaBitrates(sdp) {
   return setMediaBitrate(setMediaBitrate(sdp, "video", 500), "audio", 50);
