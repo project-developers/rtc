@@ -1,13 +1,13 @@
 const createButtonFunc = async () => {
     await openButtonFunc();
-    peerConnection[j] = new RTCPeerConnection(configuration);
+    peerConnection = new RTCPeerConnection(configuration);
     
     localStream.getTracks().forEach(track => {
-        peerConnection[j].addTrack(track, localStream)
+        peerConnection.addTrack(track, localStream)
     })
 
-peerConnection[j].onconnectionstatechange = ev => {
-  switch(peerConnection[j].connectionState) {
+peerConnection.onconnectionstatechange = ev => {
+  switch(peerConnection.connectionState) {
     case "new":
     case "checking":
       console.log("Connecting...");
@@ -37,7 +37,7 @@ peerConnection[j].onconnectionstatechange = ev => {
     const roomRef = firestore.collection("rooms").doc(callerId);
     const callerCandidatesCollection = roomRef.collection("callerCandidates");
 
-    peerConnection[j].addEventListener("icecandidate", event => {
+    peerConnection.addEventListener("icecandidate", event => {
       if(!event.candidate){
        //  console.log("Got Final Candidate!");
         return;
@@ -49,8 +49,8 @@ peerConnection[j].onconnectionstatechange = ev => {
 
 
      // Code for creating a room below
-     const offer = await peerConnection[j].createOffer();
-     await peerConnection[j].setLocalDescription(offer);
+     const offer = await peerConnection.createOffer();
+     await peerConnection.setLocalDescription(offer);
     
     offer.sdp = await setMediaBitrates(offer.sdp);
 
@@ -66,7 +66,7 @@ peerConnection[j].onconnectionstatechange = ev => {
      console.log(roomId)
      // Code for creating a room above
 
-     peerConnection[j].addEventListener("track", event => {
+     peerConnection.addEventListener("track", event => {
         // console.log('Got remote track:', event.streams[0]);
         event.streams[0].getTracks().forEach(track => {
           // console.log('Add a track to the remoteStream:', track);
@@ -77,12 +77,12 @@ peerConnection[j].onconnectionstatechange = ev => {
        // Listening for remote session description below
       let unsubscribe = roomRef.onSnapshot(async snapshot => {
         const data = snapshot.data();
-        if(peerConnection[j].iceConnectionState !== "closed"){
+        if(peerConnection.iceConnectionState !== "closed"){
 
-          if(!peerConnection[j].currentRemoteDescription && data && data.answer){
+          if(!peerConnection.currentRemoteDescription && data && data.answer){
             // console.log('Got remote description: ', data.answer);
           const rtcSessionDescription = new RTCSessionDescription(data.answer);
-          await peerConnection[j].setRemoteDescription(rtcSessionDescription);
+          await peerConnection.setRemoteDescription(rtcSessionDescription);
           }
 
         }
@@ -95,7 +95,7 @@ peerConnection[j].onconnectionstatechange = ev => {
           if (change.type === 'added') {
             let data = change.doc.data();
             // console.log(`Got new remote ICE candidate: ${JSON.stringify(data)}`);
-            await peerConnection[j].addIceCandidate(new RTCIceCandidate(data));
+            await peerConnection.addIceCandidate(new RTCIceCandidate(data));
           }
         });
       });
