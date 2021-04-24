@@ -102,7 +102,7 @@ peerConnection.onconnectionstatechange = ev => {
       // Listen for remote ICE candidates above
     
     i++;
-    j++;
+    //j++;
     k++;
 
       return () => {
