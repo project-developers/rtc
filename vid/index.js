@@ -3,7 +3,8 @@ let remoteStream;
 let roomId = '';
 let callerId = '';
 let roomIdData = [];
-let peerConnection;
+let peerConnection = [];
+let j = peerConnection.length;
 
 let configuration = {
     'iceServers': [
