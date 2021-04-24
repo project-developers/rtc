@@ -9,6 +9,16 @@ let peerConnection; // = [];
 let participantId;
 
 let configuration = {
+  'iceServers': [
+      {'urls': 'stun:stun.services.mozilla.com'},
+      {'urls': 'stun:stun.l.google.com:19302'},
+      {'urls': 'turn:numb.viagenie.ca','credential': 'Arobibi1','username': 'theotek1@gmail.com'},
+
+    ],
+  iceCandidatePoolSize: 10,
+};
+    
+  /*  
     'iceServers': [
         {'urls': 'stun:stun.services.mozilla.com'},
         {'urls': 'stun:stun1.l.google.com:19302'},
@@ -24,7 +34,7 @@ let configuration = {
         {'urls': 'stun:stun.iptel.org'},
         {'urls': 'stun:stun.rixtelecom.se'},
         {'urls': 'stun:stun.schlund.de'}*/
-    ]
+/*    ]
   }
 
 /*
