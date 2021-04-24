@@ -5,8 +5,8 @@ const openButtonFunc = async () => {
         const videoConstraint = {
             audio: true,
             video: {
-                width: 320,
-                height: 240,
+                width: 160,
+                height: 120,
                 framerate: 15
             }
         }
