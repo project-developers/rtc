@@ -25,6 +25,15 @@ let pc = new RTCPeerConnection(servers);
 let localStream = null;
 let remoteStream = null;
 
+// Here |pc| represent peer connection
+// with remote audio and video streams attached.
+//let pc = new RTCPeerConnection();
+// ... setup connection with remote audio and video.
+const [audioReceiver, videoReceiver] = pc.getReceivers();
+// Add additional 500 milliseconds of buffering.
+audioReceiver.playoutDelayHint = 0.5;
+videoReceiver.playoutDelayHint = 0.5;
+
 // HTML elements
 const webcamButton = document.getElementById('webcamButton');
 const webcamVideo = document.getElementById('webcamVideo');
