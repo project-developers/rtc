@@ -253,5 +253,5 @@ function hangup() {
 
 switchCameraButton.onclick = async () => {
   const vid = localStream.getTracks();
-  vid[1].applyConstraints({ facingMode: environment });
+  vid[1].applyConstraints({facingMode: "environment"});
 }
