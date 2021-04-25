@@ -85,8 +85,8 @@ webcamButton.onclick = async () => {
   });
   
   const [audioReceiver, videoReceiver] = pc.getReceivers();
-  audioReceiver.playoutDelayHint = 0.1;
-  videoReceiver.playoutDelayHint = 0.1;
+  audioReceiver.playoutDelayHint = 0.5;
+  videoReceiver.playoutDelayHint = 0.5;
 
   // Pull tracks from remote stream, add to video stream
   pc.ontrack = (event) => {
