@@ -43,6 +43,8 @@ const callInput = document.getElementById('callInput');
 const answerButton = document.getElementById('answerButton');
 const remoteVideo = document.getElementById('remoteVideo');
 const hangupButton = document.getElementById('hangupButton');
+const videoSelect = document.querySelector('select#videoSource');
+const selectors = videoSelect;
 let callerId = "Teo";
 let callId = "Teo";
 
