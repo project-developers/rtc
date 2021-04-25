@@ -77,7 +77,7 @@ const offerOptions = {
 
 webcamButton.onclick = async () => {
   
-  start();
+  await start();
 
   //localStream = await navigator.mediaDevices.getUserMedia({ video: {facingMode: "user"}, audio: true });
   //localStream.muted = true;
@@ -339,7 +339,7 @@ function handleError(error) {
   console.log('navigator.MediaDevices.getUserMedia error: ', error.message, error.name);
 }
 
-function start() {
+async function start() {
  /* if (window.stream) {
     window.stream.getTracks().forEach(track => {
       track.stop();
