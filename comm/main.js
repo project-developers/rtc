@@ -125,22 +125,22 @@ function handleError(error) {
 }
 
 async function start() {
-  if (localStream) {
+  /*if (localStream) {
     localStream.getTracks().forEach(track => {
       track.stop();
     });
-  }
+  }*/
   const audioSource = audioInputSelect.value;
   const videoSource = videoSelect.value;
-  const constraints = {
+  localStream.applyConstraints = {
     audio: {deviceId: audioSource ? {exact: audioSource} : undefined},
     video: {deviceId: videoSource ? {exact: videoSource} : undefined}
   };
-  localStream = await navigator.mediaDevices.getUserMedia(constraints).then(gotStream).then(gotDevices).catch(handleError);
-  
+  //localStream = await navigator.mediaDevices.getUserMedia(constraints).then(gotStream).then(gotDevices).catch(handleError);
+  /*
   localStream.getTracks().forEach((track) => {
     pc.addTrack(track, localStream);
-  });
+  });*/
 }
 
 audioInputSelect.onchange = start;
