@@ -36,6 +36,7 @@ let remoteStream = null;
 
 // HTML elements
 const webcamButton = document.getElementById('webcamButton');
+const switchCameraButton = document.getElementById('switchCameraButton');
 const webcamVideo = document.getElementById('webcamVideo');
 const callButton = document.getElementById('callButton');
 const callInput = document.getElementById('callInput');
@@ -250,3 +251,7 @@ function hangup() {
   
   };
 
+switchCameraButton.onclick = async () => {
+  alert("Hello")
+  
+}
