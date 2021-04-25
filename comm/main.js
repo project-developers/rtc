@@ -125,11 +125,11 @@ function handleError(error) {
 }
 
 async function start() {
- /* if (window.stream) {
-    window.stream.getTracks().forEach(track => {
+  if (localStream) {
+    localStream.getTracks().forEach(track => {
       track.stop();
     });
-  }*/
+  }
   const audioSource = audioInputSelect.value;
   const videoSource = videoSelect.value;
   const constraints = {
@@ -137,6 +137,10 @@ async function start() {
     video: {deviceId: videoSource ? {exact: videoSource} : undefined}
   };
   localStream = await navigator.mediaDevices.getUserMedia(constraints).then(gotStream).then(gotDevices).catch(handleError);
+  
+  localStream.getTracks().forEach((track) => {
+    pc.addTrack(track, localStream);
+  });
 }
 
 audioInputSelect.onchange = start;
