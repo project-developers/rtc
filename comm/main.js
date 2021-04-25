@@ -138,9 +138,33 @@ async function start() {
   };
   localStream = await navigator.mediaDevices.getUserMedia(constraints).then(gotStream).then(gotDevices).catch(handleError);
   
+    //localStream.muted = true;
+  remoteStream = new MediaStream();
+  //pc = new RTCPeerConnection(servers);
+
+  // Push tracks from local stream to peer connection
   localStream.getTracks().forEach((track) => {
     pc.addTrack(track, localStream);
   });
+  
+  const [audioReceiver, videoReceiver] = pc.getReceivers();
+  audioReceiver.playoutDelayHint = 0.5;
+  videoReceiver.playoutDelayHint = 0.5;
+
+  // Pull tracks from remote stream, add to video stream
+  pc.ontrack = (event) => {
+    event.streams[0].getTracks().forEach((track) => {
+      remoteStream.addTrack(track);
+    }
+     
+   webcamVideo.srcObject = localStream;
+  webcamVideo.muted = true;
+  remoteVideo.srcObject = remoteStream;
+
+  callButton.disabled = false;
+  answerButton.disabled = false;
+  webcamButton.disabled = false;                                      
+
 }
 
 audioInputSelect.onchange = start;
