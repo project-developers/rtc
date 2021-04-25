@@ -74,7 +74,7 @@ const offerOptions = {
 
 
 webcamButton.onclick = async () => {
-  localStream = await navigator.mediaDevices.getUserMedia({ video: false, audio: true });
+  localStream = await navigator.mediaDevices.getUserMedia({ video: true, audio: true });
   //localStream.muted = true;
   remoteStream = new MediaStream();
   //pc = new RTCPeerConnection(servers);
