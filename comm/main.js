@@ -20,6 +20,7 @@ const servers = {
 };
 
 // Global State
+let signaler = new SignalingChannel();
 let pc = new RTCPeerConnection(servers);
 let localStream = null;
 let remoteStream = null;
@@ -64,6 +65,7 @@ const offerOptions = {
 
 
 webcamButton.onclick = async () => {
+  try {
   localStream = await navigator.mediaDevices.getUserMedia({ video: true, audio: true });
   //localStream.muted = true;
   remoteStream = new MediaStream();
@@ -72,6 +74,8 @@ webcamButton.onclick = async () => {
   // Push tracks from local stream to peer connection
   localStream.getTracks().forEach((track) => {
     pc.addTrack(track, localStream);
+  } catch(err) {
+    console.error(err);
   });
 
   // Pull tracks from remote stream, add to video stream
@@ -108,8 +112,19 @@ callButton.onclick = async () => {
   };
 
   // Create offer
-  const offerDescription = await pc.createOffer();
-  await pc.setLocalDescription(offerDescription);
+  //const offerDescription = await pc.createOffer();
+  
+  pc.onnegotiationneeded = async options => {
+  await pc.setLocalDescription(await pc.createOffer(options));
+  signaler.send({ description: pc.localDescription });
+};
+pc.oniceconnectionstatechange = () => {
+  if (pc.iceConnectionState === "failed") {
+    pc.restartIce();
+  }
+};
+  
+  //await pc.setLocalDescription(offerDescription);
 
   const offer = {
     sdp: offerDescription.sdp,
@@ -151,18 +166,54 @@ answerButton.onclick = async () => {
   const answerCandidates = callDoc.collection('answerCandidates');
   const offerCandidates = callDoc.collection('offerCandidates');
 
+  pc.onicecandidate = ({candidate}) => signaler.send({candidate});
+  /*      
   pc.onicecandidate = (event) => {
     event.candidate && answerCandidates.add(event.candidate.toJSON());
   };
-
+*/
   const callData = (await callDoc.get()).data();
-
+/*
   const offerDescription = callData.offer;
   await pc.setRemoteDescription(new RTCSessionDescription(offerDescription));
 
   const answerDescription = await pc.createAnswer();
   await pc.setLocalDescription(answerDescription);
+*/
+  const description = callData.offer;
+  
+  let ignoreOffer = false;
 
+signaler.onmessage = async ({ data: { description, candidate } }) => {
+  try {
+    if (description) {
+      const offerCollision = (description.type == "offer") &&
+                             (makingOffer || pc.signalingState != "stable");
+
+      ignoreOffer = !polite && offerCollision;
+      if (ignoreOffer) {
+        return;
+      }
+
+      await pc.setRemoteDescription(description);
+      if (description.type == "offer") {
+        await pc.setLocalDescription();
+        signaler.send({ description: pc.localDescription })
+      }
+    } else if (candidate) {
+      try {
+        await pc.addIceCandidate(candidate);
+      } catch(err) {
+        if (!ignoreOffer) {
+          throw err;
+        }
+      }
+    }
+  } catch(err) {
+    console.error(err);
+  }
+}
+        
   const answer = {
     type: answerDescription.type,
     sdp: answerDescription.sdp,
