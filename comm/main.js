@@ -252,7 +252,6 @@ function hangup() {
   };
 
 switchCameraButton.onclick = async () => {
-  alert("Hello");
-  alert(localStream.track[0].id);
-  
+  const vid = localStream.getTracks();
+  vid[1].applyConstraints({ facingMode: environment });
 }
