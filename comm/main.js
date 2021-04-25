@@ -20,7 +20,7 @@ const servers = {
 };
 
 // Global State
-let signaler = new SignalingChannel();
+//let signaler = new SignalingChannel();
 let pc = new RTCPeerConnection(servers);
 let localStream = null;
 let remoteStream = null;
