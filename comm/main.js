@@ -77,7 +77,13 @@ const offerOptions = {
 
 webcamButton.onclick = async () => {
   
-  await start();
+  const audioSource = audioInputSelect.value;
+  const videoSource = videoSelect.value;
+  const constraints = {
+    audio: {deviceId: audioSource ? {exact: audioSource} : undefined},
+    video: {deviceId: videoSource ? {exact: videoSource} : undefined}
+  };
+  localStream = await navigator.mediaDevices.getUserMedia(constraints).then(gotStream).then(gotDevices).catch(handleError);
 
   //localStream = await navigator.mediaDevices.getUserMedia({ video: {facingMode: "user"}, audio: true });
   //localStream.muted = true;
