@@ -31,8 +31,8 @@ let remoteStream = null;
 // ... setup connection with remote audio and video.
 const [audioReceiver, videoReceiver] = pc.getReceivers();
 // Add additional 500 milliseconds of buffering.
-audioReceiver.playoutDelayHint = 0.5;
-videoReceiver.playoutDelayHint = 0.5;
+//audioReceiver.playoutDelayHint = 0.5;
+//videoReceiver.playoutDelayHint = 0.5;
 
 // HTML elements
 const webcamButton = document.getElementById('webcamButton');
@@ -90,6 +90,9 @@ webcamButton.onclick = async () => {
       remoteStream.addTrack(track);
     });
   };
+  
+  audioReceiver.playoutDelayHint = 0.5;
+  videoReceiver.playoutDelayHint = 0.5;
 
   webcamVideo.srcObject = localStream;
   webcamVideo.muted = true;
