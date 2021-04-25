@@ -112,8 +112,8 @@ callButton.onclick = async () => {
   };
 
   // Create offer
-  //const offerDescription = await pc.createOffer();
-  
+  const offerDescription = await pc.createOffer();
+  /*
   pc.onnegotiationneeded = async options => {
   await pc.setLocalDescription(await pc.createOffer(options));
   signaler.send({ description: pc.localDescription });
@@ -123,8 +123,8 @@ pc.oniceconnectionstatechange = () => {
     pc.restartIce();
   }
 };
-  
-  //await pc.setLocalDescription(offerDescription);
+  */
+  await pc.setLocalDescription(offerDescription);
 
   const offer = {
     sdp: offerDescription.sdp,
@@ -166,22 +166,22 @@ answerButton.onclick = async () => {
   const answerCandidates = callDoc.collection('answerCandidates');
   const offerCandidates = callDoc.collection('offerCandidates');
 
-  pc.onicecandidate = ({candidate}) => signaler.send({candidate});
-  /*      
+  //pc.onicecandidate = ({candidate}) => signaler.send({candidate});
+        
   pc.onicecandidate = (event) => {
     event.candidate && answerCandidates.add(event.candidate.toJSON());
   };
-*/
+
   const callData = (await callDoc.get()).data();
-/*
+
   const offerDescription = callData.offer;
   await pc.setRemoteDescription(new RTCSessionDescription(offerDescription));
 
   const answerDescription = await pc.createAnswer();
   await pc.setLocalDescription(answerDescription);
-*/
+
   const description = callData.offer;
-  
+/*  
   let ignoreOffer = false;
 
 signaler.onmessage = async ({ data: { description, candidate } }) => {
@@ -213,7 +213,7 @@ signaler.onmessage = async ({ data: { description, candidate } }) => {
     console.error(err);
   }
 }
-        
+      */  
   const answer = {
     type: answerDescription.type,
     sdp: answerDescription.sdp,
