@@ -76,6 +76,8 @@ const offerOptions = {
 
 
 webcamButton.onclick = async () => {
+  
+  start();
 
   //localStream = await navigator.mediaDevices.getUserMedia({ video: {facingMode: "user"}, audio: true });
   //localStream.muted = true;
@@ -357,5 +359,5 @@ audioOutputSelect.onchange = changeAudioDestination;
 
 videoSelect.onchange = start;
 
-start();
+//start();
 
