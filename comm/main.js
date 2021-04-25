@@ -357,5 +357,5 @@ audioOutputSelect.onchange = changeAudioDestination;
 
 videoSelect.onchange = start;
 
-//start();
+start();
 
