@@ -87,12 +87,13 @@ webcamButton.onclick = async () => {
   // Pull tracks from remote stream, add to video stream
   pc.ontrack = (event) => {
     event.streams[0].getTracks().forEach((track) => {
+      audioReceiver.playoutDelayHint = 0.5;
+      videoReceiver.playoutDelayHint = 0.5;
       remoteStream.addTrack(track);
     });
   };
   
-  audioReceiver.playoutDelayHint = 0.5;
-  videoReceiver.playoutDelayHint = 0.5;
+  
 
   webcamVideo.srcObject = localStream;
   webcamVideo.muted = true;
