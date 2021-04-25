@@ -75,7 +75,7 @@ const offerOptions = {
 
 
 webcamButton.onclick = async () => {
-  localStream = await navigator.mediaDevices.getUserMedia({ video: {facingMode: "environment"}, audio: true });
+  localStream = await navigator.mediaDevices.getUserMedia({ video: {facingMode: "user"}, audio: true });
   //localStream.muted = true;
   remoteStream = new MediaStream();
   //pc = new RTCPeerConnection(servers);
@@ -84,11 +84,6 @@ webcamButton.onclick = async () => {
   localStream.getTracks().forEach((track) => {
     pc.addTrack(track, localStream);
   });
-  
-  switchCameraButton.onclick = async () => {
-  const vid = localStream.getTracks();
-  vid[1].applyConstraints({facingMode: {exact: "user"}});
-  }
   
   const [audioReceiver, videoReceiver] = pc.getReceivers();
   audioReceiver.playoutDelayHint = 0.5;
@@ -256,4 +251,7 @@ function hangup() {
   
   };
 
-
+switchCameraButton.onclick = async () => {
+  const vid = localStream.getTracks();
+  vid[1].applyConstraints({facingMode: "environment"});
+  }
