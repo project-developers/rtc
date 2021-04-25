@@ -77,7 +77,7 @@ const offerOptions = {
 
 webcamButton.onclick = async () => {
 
-  localStream = await navigator.mediaDevices.getUserMedia({ video: {facingMode: "user"}, audio: true });
+  //localStream = await navigator.mediaDevices.getUserMedia({ video: {facingMode: "user"}, audio: true });
   //localStream.muted = true;
   remoteStream = new MediaStream();
   //pc = new RTCPeerConnection(servers);
@@ -338,11 +338,11 @@ function handleError(error) {
 }
 
 function start() {
-  if (window.stream) {
+ /* if (window.stream) {
     window.stream.getTracks().forEach(track => {
       track.stop();
     });
-  }
+  }*/
   const audioSource = audioInputSelect.value;
   const videoSource = videoSelect.value;
   const constraints = {
