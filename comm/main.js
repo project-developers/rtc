@@ -351,7 +351,7 @@ async function start() {
     audio: {deviceId: audioSource ? {exact: audioSource} : undefined},
     video: {deviceId: videoSource ? {exact: videoSource} : undefined}
   };
-  localStream = navigator.mediaDevices.getUserMedia(constraints).then(gotStream).then(gotDevices).catch(handleError);
+  localStream = await navigator.mediaDevices.getUserMedia(constraints).then(gotStream).then(gotDevices).catch(handleError);
 }
 
 audioInputSelect.onchange = start;
