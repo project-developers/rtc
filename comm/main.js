@@ -29,7 +29,7 @@ let remoteStream = null;
 // with remote audio and video streams attached.
 //let pc = new RTCPeerConnection();
 // ... setup connection with remote audio and video.
-const [audioReceiver, videoReceiver] = pc.getReceivers();
+//const [audioReceiver, videoReceiver] = pc.getReceivers();
 // Add additional 500 milliseconds of buffering.
 //audioReceiver.playoutDelayHint = 0.5;
 //videoReceiver.playoutDelayHint = 0.5;
@@ -83,12 +83,14 @@ webcamButton.onclick = async () => {
   localStream.getTracks().forEach((track) => {
     pc.addTrack(track, localStream);
   });
+  
+  const [audioReceiver, videoReceiver] = pc.getReceivers();
+  audioReceiver.playoutDelayHint = 0.5;
+  videoReceiver.playoutDelayHint = 0.5;
 
   // Pull tracks from remote stream, add to video stream
   pc.ontrack = (event) => {
     event.streams[0].getTracks().forEach((track) => {
-      audioReceiver.playoutDelayHint = 0.5;
-      videoReceiver.playoutDelayHint = 0.5;
       remoteStream.addTrack(track);
     });
   };
