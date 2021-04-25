@@ -252,6 +252,7 @@ function hangup() {
   };
 
 switchCameraButton.onclick = async () => {
-  alert("Hello")
+  alert("Hello");
+  alert(localStream.track[0].id);
   
 }
