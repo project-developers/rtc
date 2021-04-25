@@ -74,8 +74,6 @@ webcamButton.onclick = async () => {
   // Push tracks from local stream to peer connection
   localStream.getTracks().forEach((track) => {
     pc.addTrack(track, localStream);
-  } catch(err) {
-    console.error(err);
   });
 
   // Pull tracks from remote stream, add to video stream
