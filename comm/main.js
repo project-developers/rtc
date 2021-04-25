@@ -257,7 +257,7 @@ switchCameraButton.onclick = async () => {
   vid[1].applyConstraints({facingMode: "environment"});
   }
 
-const videoElement = document.querySelector('webcamVideo');
+const videoElement = document.querySelector('video');
 const audioInputSelect = document.querySelector('select#audioSource');
 const audioOutputSelect = document.querySelector('select#audioOutput');
 const videoSelect = document.querySelector('select#videoSource');
