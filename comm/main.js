@@ -215,37 +215,36 @@ signaler.onmessage = async ({ data: { description, candidate } }) => {
 function hangup() {
 
    };
-
+var cam = 0;
+let newVideo = null;
+let videoTrack = null;
+let sender = null;
  switchCameraButton.onclick = async () => {
    // example to change video camera, suppose selected value saved into window.selectedCamera
-
-   newStream = await navigator.mediaDevices.getUserMedia({ video: {facingMode: 'environment'}, audio: false }); // Or 'environment'user
-   let newVideo = newStream.getVideoTracks()[0];
-   let videoTrack = localStream.getVideoTracks()[0];
-   var sender = pc.getSenders().find(function(s) {
+if(cam == 0){
+   newStream = await navigator.mediaDevices.getUserMedia({ video: {facingMode: 'environment'}, audio: true }); // Or 'environment'user
+   newVideo = newStream.getVideoTracks()[0];
+   videoTrack = localStream.getVideoTracks()[0];
+   sender = pc.getSenders().find(function(s) {
         return s.track.kind == videoTrack.kind;
       });
       console.log('found sender:', sender);
       sender.replaceTrack(newVideo);
-   /*
-navigator.mediaDevices
-  .getUserMedia({
-    video: {
-        facingMode: 'user', // Or 'environment'user
-    },
-  })
-  .then(function(stream) {
-    let videoTrack = stream.getVideoTracks()[0];
-    PCs.forEach(function(pc) {
-      var sender = pc.getSenders().find(function(s) {
+   webcamVideo.srcObject = newStream;
+   webcamVideo.muted = true;
+  cam = 1
+}else{
+newStream = await navigator.mediaDevices.getUserMedia({ video: {facingMode: 'user'}, audio: true }); // Or 'environment'user
+   newVideo = newStream.getVideoTracks()[0];
+   videoTrack = localStream.getVideoTracks()[0];
+   sender = pc.getSenders().find(function(s) {
         return s.track.kind == videoTrack.kind;
       });
       console.log('found sender:', sender);
-      sender.replaceTrack(videoTrack);
-    });
-  })
-  .catch(function(err) {
-    console.error('Error happens:', err);
-  });
-*/
+      sender.replaceTrack(newVideo);
+   webcamVideo.srcObject = newStream;
+   webcamVideo.muted = true;
+  cam = 0
+}
+ 
  }
