@@ -222,6 +222,10 @@ let sender = null;
  switchCameraButton.onclick = async () => {
    // example to change video camera, suppose selected value saved into window.selectedCamera
 if(cam == 0){
+ if(newStream){
+   const tracks = newStream.getTracks();
+tracks.forEach(track => track.stop());
+ }
    newStream = await navigator.mediaDevices.getUserMedia({ video: {facingMode: 'environment'}, audio: false }); // Or 'environment'user
    newVideo = newStream.getVideoTracks()[0];
    videoTrack = localStream.getVideoTracks()[0];
@@ -234,6 +238,10 @@ if(cam == 0){
    //webcamVideo.muted = true;
   cam = 1
 }else{
+  if(newStream){
+   const tracks = newStream.getTracks();
+tracks.forEach(track => track.stop());
+ }
 newStream = await navigator.mediaDevices.getUserMedia({ video: {facingMode: 'user'}, audio: false }); // Or 'environment'user
    newVideo = newStream.getVideoTracks()[0];
    videoTrack = localStream.getVideoTracks()[0];
