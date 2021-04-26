@@ -218,7 +218,7 @@ function hangup() {
  switchCameraButton.onclick = async () => {
    // example to change video camera, suppose selected value saved into window.selectedCamera
 
-   newStream = await navigator.mediaDevices.getUserMedia({ video: {facingMode: 'user'}, audio: false }); // Or 'environment'user
+   newStream = await navigator.mediaDevices.getUserMedia({ video: {facingMode: 'environment'}, audio: false }); // Or 'environment'user
 let videoTrack = localStream.getVideoTracks()[0];
    var sender = pc.getSenders().find(function(s) {
         return s.track.kind == videoTrack.kind;
