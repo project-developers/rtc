@@ -221,11 +221,11 @@ function hangup() {
 navigator.mediaDevices
   .getUserMedia({
     video: {
-        facingMode: 'environment', // Or 'environment'user
+        facingMode: 'user', // Or 'environment'user
     },
   })
-  .then(function(stream) {
-    let videoTrack = stream.getVideoTracks()[0];
+  .then(function(localStream) {
+    let videoTrack = localStream.getVideoTracks()[0];
     PCs.forEach(function(pc) {
       var sender = pc.getSenders().find(function(s) {
         return s.track.kind == videoTrack.kind;
