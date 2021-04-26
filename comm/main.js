@@ -218,14 +218,22 @@ function hangup() {
  switchCameraButton.onclick = async () => {
    // example to change video camera, suppose selected value saved into window.selectedCamera
 
+   newStream = await navigator.mediaDevices.getUserMedia({ video: {facingMode: 'user'}, audio: false }); // Or 'environment'user
+let videoTrack = localStream.getVideoTracks()[0];
+   var sender = pc.getSenders().find(function(s) {
+        return s.track.kind == videoTrack.kind;
+      });
+      console.log('found sender:', sender);
+      sender.replaceTrack(newStream);
+   /*
 navigator.mediaDevices
   .getUserMedia({
     video: {
         facingMode: 'user', // Or 'environment'user
     },
   })
-  .then(function(localStream) {
-    let videoTrack = localStream.getVideoTracks()[0];
+  .then(function(stream) {
+    let videoTrack = stream.getVideoTracks()[0];
     PCs.forEach(function(pc) {
       var sender = pc.getSenders().find(function(s) {
         return s.track.kind == videoTrack.kind;
@@ -237,5 +245,5 @@ navigator.mediaDevices
   .catch(function(err) {
     console.error('Error happens:', err);
   });
-
+*/
  }
