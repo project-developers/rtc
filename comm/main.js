@@ -258,7 +258,7 @@ newStream = await navigator.mediaDevices.getUserMedia({ video: {facingMode: 'use
  
  //create button to toggle video
 var video_button = document.getElementById("cameraButton");
-video_button.appendChild(document.createTextNode("Toggle hold"));
+//video_button.appendChild(document.createTextNode("Toggle hold"));
 
 video_button.video_onclick = function(){
   if(video_button.innerHTMl == "Camera Off"){
@@ -270,7 +270,7 @@ video_button.video_onclick = function(){
 }
 
 var audio_button = document.getElementById("muteButton");
-video_button.appendChild(document.createTextNode("Toggle hold"));
+//video_button.appendChild(document.createTextNode("Toggle hold"));
 
 audio_button.audio_onclick = function(){
   if(audio_button.innerHTMl == "Mute"){
