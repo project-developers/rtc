@@ -254,5 +254,19 @@ newStream = await navigator.mediaDevices.getUserMedia({ video: {facingMode: 'use
   // webcamVideo.muted = true;
   cam = 0
 }
- 
  }
+ 
+ //create button to toggle video
+var video_button = document.createElement("video_button");
+video_button.appendChild(document.createTextNode("Toggle hold"));
+
+video_button.video_onclick = function(){
+  localStream.getVideoTracks()[0].enabled = !(localStream.getVideoTracks()[0].enabled);
+}
+
+var audio_button = document.createElement("audio_button");
+video_button.appendChild(document.createTextNode("Toggle hold"));
+
+audio_button.audio_onclick = function(){
+  localStream.getAudioTracks()[0].enabled = !(localStream.getAudioTracks()[0].enabled);
+}
