@@ -222,7 +222,7 @@ let sender = null;
  switchCameraButton.onclick = async () => {
    // example to change video camera, suppose selected value saved into window.selectedCamera
 if(cam == 0){
-   newStream = await navigator.mediaDevices.getUserMedia({ video: {facingMode: 'environment'}, audio: true }); // Or 'environment'user
+   newStream = await navigator.mediaDevices.getUserMedia({ video: {facingMode: 'environment'}, audio: false }); // Or 'environment'user
    newVideo = newStream.getVideoTracks()[0];
    videoTrack = localStream.getVideoTracks()[0];
    sender = pc.getSenders().find(function(s) {
@@ -231,10 +231,10 @@ if(cam == 0){
       console.log('found sender:', sender);
       sender.replaceTrack(newVideo);
    webcamVideo.srcObject = newStream;
-   webcamVideo.muted = true;
+   //webcamVideo.muted = true;
   cam = 1
 }else{
-newStream = await navigator.mediaDevices.getUserMedia({ video: {facingMode: 'user'}, audio: true }); // Or 'environment'user
+newStream = await navigator.mediaDevices.getUserMedia({ video: {facingMode: 'user'}, audio: false }); // Or 'environment'user
    newVideo = newStream.getVideoTracks()[0];
    videoTrack = localStream.getVideoTracks()[0];
    sender = pc.getSenders().find(function(s) {
@@ -243,7 +243,7 @@ newStream = await navigator.mediaDevices.getUserMedia({ video: {facingMode: 'use
       console.log('found sender:', sender);
       sender.replaceTrack(newVideo);
    webcamVideo.srcObject = newStream;
-   webcamVideo.muted = true;
+  // webcamVideo.muted = true;
   cam = 0
 }
  
