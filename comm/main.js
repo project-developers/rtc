@@ -220,12 +220,13 @@ function hangup() {
    // example to change video camera, suppose selected value saved into window.selectedCamera
 
    newStream = await navigator.mediaDevices.getUserMedia({ video: {facingMode: 'environment'}, audio: false }); // Or 'environment'user
-let videoTrack = localStream.getVideoTracks()[0];
+   let newVideo = newStream.getVideoTracks()[0];
+   let videoTrack = localStream.getVideoTracks()[0];
    var sender = pc.getSenders().find(function(s) {
         return s.track.kind == videoTrack.kind;
       });
       console.log('found sender:', sender);
-      sender.replaceTrack(newStream);
+      sender.replaceTrack(newVideo);
    /*
 navigator.mediaDevices
   .getUserMedia({
