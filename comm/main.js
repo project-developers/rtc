@@ -221,10 +221,8 @@ function hangup() {
 navigator.mediaDevices
   .getUserMedia({
     video: {
-      deviceId: {
-        exact: window.selectedCamera
-      }
-    }
+        facingMode: 'environment', // Or 'environment'user
+    },
   })
   .then(function(stream) {
     let videoTrack = stream.getVideoTracks()[0];
