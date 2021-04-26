@@ -1,398 +1,596 @@
+/* eslint no-unused-expressions: 0 */
 /*
- *  Copyright (c) 2017 The WebRTC project authors. All Rights Reserved.
+ *  Copyright (c) 2015 The WebRTC project authors. All Rights Reserved.
  *
  *  Use of this source code is governed by a BSD-style license
  *  that can be found in the LICENSE file in the root of the source
  *  tree.
  */
-
 'use strict';
+let peerConnection;
+//let remoteConnection;
+let dataChannel;
+let dataChannel2;
+//let receiveChannel;
+let fileReader;
+const bitrateDiv = document.querySelector('div#bitrate');
+const averageBitrateDiv = document.querySelector('div#averageBitrate');
+const fileInput = document.querySelector('input#fileInput');
+const abortButton = document.querySelector('button#abortButton');
+//const downloadAnchor = document.querySelector('a#download');
+let downloadAnchor;
+const sendProgress = document.querySelector('progress#sendProgress');
+const receiveProgress = document.querySelector('progress#receiveProgress');
+const statusMessage = document.querySelector('span#status');
+const sendFileButton = document.querySelector('button#sendFile');
+const retryButton = document.querySelector('button#retry');
+const errorMessage = document.querySelector('div#errorMsg');
+let receiveBuffer = [];
+let receivedSize = 0;
+let bytesPrev = 0;
+let timestampPrev = 0;
+let timestampStart;
+let statsInterval = null;
+let bitrateMax = 0;
+let sending = 0;
+let pacer = 0;
 
-
-const servers = {
-  'iceServers': [
-      {'urls': 'stun:stun.services.mozilla.com'},
-      {'urls': 'stun:stun.l.google.com:19302'},
-      {'urls': 'turn:numb.viagenie.ca','credential': 'Arobibi1','username': 'theotek1@gmail.com'},
-
-    ],
-  iceCandidatePoolSize: 10,
-};
-
-// Global State
-//let signaler = new SignalingChannel();
-let pc = new RTCPeerConnection(servers);
-let localStream = null;
-let remoteStream = null;
-
-// Here |pc| represent peer connection
-// with remote audio and video streams attached.
-//let pc = new RTCPeerConnection();
-// ... setup connection with remote audio and video.
-//const [audioReceiver, videoReceiver] = pc.getReceivers();
-// Add additional 500 milliseconds of buffering.
-//audioReceiver.playoutDelayHint = 0.5;
-//videoReceiver.playoutDelayHint = 0.5;
-
-// HTML elements
-const webcamButton = document.getElementById('webcamButton');
-const switchCameraButton = document.getElementById('switchCameraButton');
-const webcamVideo = document.getElementById('webcamVideo');
-const callButton = document.getElementById('callButton');
-const callInput = document.getElementById('callInput');
-const answerButton = document.getElementById('answerButton');
-const remoteVideo = document.getElementById('remoteVideo');
-const hangupButton = document.getElementById('hangupButton');
-
-
-const videoElement = document.querySelector('video');
-const audioInputSelect = document.querySelector('select#audioSource');
-const audioOutputSelect = document.querySelector('select#audioOutput');
-const videoSelect = document.querySelector('select#videoSource');
-const selectors = [audioInputSelect, audioOutputSelect, videoSelect];
-
-audioOutputSelect.disabled = !('sinkId' in HTMLMediaElement.prototype);
-
-function gotDevices(deviceInfos) {
-  // Handles being called several times to update labels. Preserve values.
-  const values = selectors.map(select => select.value);
-  selectors.forEach(select => {
-    while (select.firstChild) {
-      select.removeChild(select.firstChild);
-    }
-  });
-  for (let i = 0; i !== deviceInfos.length; ++i) {
-    const deviceInfo = deviceInfos[i];
-    const option = document.createElement('option');
-    option.value = deviceInfo.deviceId;
-    if (deviceInfo.kind === 'audioinput') {
-      option.text = deviceInfo.label || `microphone ${audioInputSelect.length + 1}`;
-      audioInputSelect.appendChild(option);
-    } else if (deviceInfo.kind === 'audiooutput') {
-      option.text = deviceInfo.label || `speaker ${audioOutputSelect.length + 1}`;
-      audioOutputSelect.appendChild(option);
-    } else if (deviceInfo.kind === 'videoinput') {
-      option.text = deviceInfo.label || `camera ${videoSelect.length + 1}`;
-      videoSelect.appendChild(option);
-    } else {
-      console.log('Some other kind of source/device: ', deviceInfo);
-    }
+sendFileButton.addEventListener('click', () => createConnection());
+fileInput.addEventListener('change', handleFileInputChange, false);
+abortButton.addEventListener('click', () => {
+  if (fileReader && fileReader.readyState === 1) {
+    console.log('Abort read!');
+    fileReader.abort();
   }
-  selectors.forEach((select, selectorIndex) => {
-    if (Array.prototype.slice.call(select.childNodes).some(n => n.value === values[selectorIndex])) {
-      select.value = values[selectorIndex];
-    }
-  });
-}
-
-navigator.mediaDevices.enumerateDevices().then(gotDevices).catch(handleError);
-
-// Attach audio output device to video element using device/sink ID.
-function attachSinkId(element, sinkId) {
-  if (typeof element.sinkId !== 'undefined') {
-    element.setSinkId(sinkId)
-        .then(() => {
-          console.log(`Success, audio output device attached: ${sinkId}`);
-        })
-        .catch(error => {
-          let errorMessage = error;
-          if (error.name === 'SecurityError') {
-            errorMessage = `You need to use HTTPS for selecting audio output device: ${error}`;
-          }
-          console.error(errorMessage);
-          // Jump back to first output device in the list as it's the default.
-          audioOutputSelect.selectedIndex = 0;
-        });
-  } else {
-    console.warn('Browser does not support output device selection.');
-  }
-}
-
-function changeAudioDestination() {
-  const audioDestination = audioOutputSelect.value;
-  attachSinkId(videoElement, audioDestination);
-}
-
-function gotStream(stream) {
-  window.stream = stream; // make stream available to console
-  videoElement.srcObject = stream;
-  // Refresh button list in case labels have become available
-  return navigator.mediaDevices.enumerateDevices();
-}
-
-function handleError(error) {
-  console.log('navigator.MediaDevices.getUserMedia error: ', error.message, error.name);
-}
-
-async function start() {
-  if (localStream) {
-    localStream.getTracks().forEach(track => {
-     // track.stop();
-    });
-  }
-  const audioSource = audioInputSelect.value;
-  const videoSource = videoSelect.value;
-  const constraints = {
-    audio: {deviceId: audioSource ? {exact: audioSource} : undefined},
-    video: {deviceId: videoSource ? {exact: videoSource} : undefined}
-  };
-  localStream = await navigator.mediaDevices.getUserMedia(constraints).then(gotStream).then(gotDevices).catch(handleError);
-  
-    //localStream.muted = true;
-  remoteStream = new MediaStream();
-  //pc = new RTCPeerConnection(servers);
-
-  // Push tracks from local stream to peer connection
-  localStream.getTracks().forEach((track) => {
-    pc.addTrack(track, localStream);
-  });
-  
-  const [audioReceiver, videoReceiver] = pc.getReceivers();
-  audioReceiver.playoutDelayHint = 0.5;
-  videoReceiver.playoutDelayHint = 0.5;
-
-  // Pull tracks from remote stream, add to video stream
-  pc.ontrack = (event) => {
-    event.streams[0].getTracks().forEach((track) => {
-      remoteStream.addTrack(track);
-    }
-     
-   webcamVideo.srcObject = localStream;
-  webcamVideo.muted = true;
-  remoteVideo.srcObject = remoteStream;
-
-  callButton.disabled = false;
-  answerButton.disabled = false;
-  webcamButton.disabled = false;                                      
-
-}
-
-audioInputSelect.onchange = start;
-audioOutputSelect.onchange = changeAudioDestination;
-
-videoSelect.onchange = start;
-
-//start();
-
-let callerId = "Teo";
-let callId = "Teo";
-
-//callerId = prompt('Please enter your ID','');
-hangupButton.onclick = hangup;
-
-let startTime;
-
-remoteVideo.addEventListener('loadedmetadata', function() {
-  console.log(`Remote video videoWidth: ${this.videoWidth}px,  videoHeight: ${this.videoHeight}px`);
 });
-
-remoteVideo.onresize = () => {
-  console.log(`Remote video size changed to ${remoteVideo.videoWidth}x${remoteVideo.videoHeight}`);
-  console.warn('RESIZE', remoteVideo.videoWidth, remoteVideo.videoHeight);
-  // We'll use the first onsize callback as an indication that video has started
-  // playing out.
-  if (startTime) {
-    const elapsedTime = window.performance.now() - startTime;
-    console.log(`Setup time: ${elapsedTime.toFixed(3)}ms`);
-    startTime = null;
+//retryButton.addEventListener('click', () => retry());
+async function handleFileInputChange() {
+  const file = fileInput.files[0];
+  if (!file) {
+    console.log('No file chosen');
+  } else {
+    sendFileButton.disabled = false;
   }
-};
+}
 
-const offerOptions = {
-  offerToReceiveAudio: 1,
-  offerToReceiveVideo: 1
-};
-// 1. Setup media sources
-
-
-webcamButton.onclick = async () => {
+async function createConnection() {
+  abortButton.disabled = false;
+  sendFileButton.disabled = true;
   
-  const audioSource = audioInputSelect.value;
-  const videoSource = videoSelect.value;
-  const constraints = {
-    audio: {deviceId: audioSource ? {exact: audioSource} : undefined},
-    video: {deviceId: videoSource ? {exact: videoSource} : undefined}
+  if (dataChannel.readyState == "open") {
+      sendData();
+  }else if(dataChannel && peerConnection){
+    dataChannel.close();
+	dataChannel = null;
+	//sendChannel = localConnection.createDataChannel('sendDataChannel');
+	dataChannel = peerConnection.createDataChannel('sendDataChannel', {maxPacketLifeTime: 32768}); //, {negotiated: true, id: 0}); //, {maxRetransmits: 1048576});
+	dataChannel.binaryType = 'arraybuffer';
+  //console.log('Created send data channel');
+	dataChannel.onmessage = onReceiveMessageCallback;
+	dataChannel.onopen = ondataChannelStateChange;
+	dataChannel.onclose = ondataChannelStateChange;
+	dataChannel.error = onError;
+    sendData();
+  }else{
+    clickcreateoffer();
+    sendData();
   };
-  localStream = await navigator.mediaDevices.getUserMedia(constraints).then(gotStream).then(gotDevices).catch(handleError);
+}
 
-  //localStream = await navigator.mediaDevices.getUserMedia({ video: {facingMode: "user"}, audio: true });
-  //localStream.muted = true;
-  remoteStream = new MediaStream();
-  //pc = new RTCPeerConnection(servers);
-
-  // Push tracks from local stream to peer connection
-  localStream.getTracks().forEach((track) => {
-    pc.addTrack(track, localStream);
-  });
+async function createConnection2() {
+  abortButton.disabled = false;
+  sendFileButton.disabled = true;
   
-  const [audioReceiver, videoReceiver] = pc.getReceivers();
-  audioReceiver.playoutDelayHint = 0.5;
-  videoReceiver.playoutDelayHint = 0.5;
-
-  // Pull tracks from remote stream, add to video stream
-  pc.ontrack = (event) => {
-    event.streams[0].getTracks().forEach((track) => {
-      remoteStream.addTrack(track);
-    });
+  if (dataChannel2.readyState == "open") {
+      sendData2();
+  }else if(dataChannel2 && peerConnection){
+    dataChannel2.close();
+	dataChannel2 = null;
+	//sendChannel = localConnection.createDataChannel('sendDataChannel');
+	dataChannel2 = peerConnection.createDataChannel('sendDataChannel2', {maxPacketLifeTime: 32768}); //, {negotiated: true, id: 1}); //, {maxRetransmits: 1048576});
+	dataChannel2.binaryType = 'arraybuffer';
+  //console.log('Created send data channel');
+	dataChannel2.onmessage = onReceiveMessageCallback;
+	dataChannel2.onopen = ondataChannelStateChange2;
+	dataChannel2.onclose = ondataChannelStateChange2;
+	dataChannel2.error = onError2;
+    sendData2();
+  }else{
+    clickcreateoffer();
+    sendData2();
   };
-  
-  
+}
 
-  webcamVideo.srcObject = localStream;
-  webcamVideo.muted = true;
-  remoteVideo.srcObject = remoteStream;
 
-  callButton.disabled = false;
-  answerButton.disabled = false;
-  webcamButton.disabled = false;
-};
-
-// 2. Create an offer
-callButton.onclick = async () => {
-  // Reference Firestore collections for signaling
-  if(callerId == 0){
-    callerId = prompt('Please enter caller ID','');
-  };
-  const callDoc = firestore.collection('calls').doc(callerId);
-  const offerCandidates = callDoc.collection('offerCandidates');
-  const answerCandidates = callDoc.collection('answerCandidates');
-
-  callInput.value = callDoc.id;
-
-  // Get candidates for caller, save to db
-  pc.onicecandidate = (event) => {
-    event.candidate && offerCandidates.add(event.candidate.toJSON());
-  };
-
-  // Create offer
-  const offerDescription = await pc.createOffer();
-  /*
-  pc.onnegotiationneeded = async options => {
-  await pc.setLocalDescription(await pc.createOffer(options));
-  signaler.send({ description: pc.localDescription });
-};
-pc.oniceconnectionstatechange = () => {
-  if (pc.iceConnectionState === "failed") {
-    pc.restartIce();
+function sendData() {
+  const file = fileInput.files[0];
+  statusMessage.textContent = '';
+  //downloadAnchor.textContent = '';
+  if (file.size === 0) {
+    bitrateDiv.innerHTML = '';
+    statusMessage.textContent = 'File is empty, please select a non-empty file';
+     return;
   }
-};
-  */
-  await pc.setLocalDescription(offerDescription);
-
-  const offer = {
-    sdp: offerDescription.sdp,
-    type: offerDescription.type,
-  };
-
-  await callDoc.set({ offer });
-
-  // Listen for remote answer
-  callDoc.onSnapshot((snapshot) => {
-    const data = snapshot.data();
-    if (!pc.currentRemoteDescription && data?.answer) {
-      const answerDescription = new RTCSessionDescription(data.answer);
-      pc.setRemoteDescription(answerDescription);
+	
+  pacer = 1;
+  sendProgress.max = file.size;
+  var details = `${[file.name, file.size, file.type, file.lastModified].join('~')}`;
+  
+  const chunkSize = 16430;
+  fileReader = new FileReader();
+  let offset = 0;
+  dataChannel.send(details);
+  
+  fileReader.addEventListener('error', error => console.error('Error reading file:', error));
+  fileReader.addEventListener('abort', event => console.log('File reading aborted:', event));
+  fileReader.addEventListener('load', sendChunk);
+                              
+    async function sendChunk(event) {
+    //console.log('FileRead.onload ', e);   
+	   await sleep(1);
+    dataChannel.send(event.target.result);
+     
+	//pacer += 1;
+	    
+	    await sleep(1);
+	/*
+    if (pacer == 1024){
+		await sleep(50);
+		buffer();
+		pacer = 0;
+	}
+	*/
+    offset += event.target.result.byteLength;
+    sendProgress.value = offset;
+    if (offset < file.size) {
+      readSlice(offset);
+	    //await sleep(5);
+    }else{
+	    pacer = 0;
+	    sendProgress.value = 0;
     }
-  });
-       
-  //callId = callerId;
+  };
+  
+  async function readSlice(offsetValue) {
+      //console.log('readSlice ', o);
+	  return new Promise(resolve => {
+		  const slice = file.slice(offset, (offsetValue + chunkSize));
+		  resolve(fileReader.readAsArrayBuffer(slice));
+	  });
+  };
+  readSlice(0);
+	
+}
 
-  // When answered, add candidate to peer connection
-  answerCandidates.onSnapshot((snapshot) => {
-    snapshot.docChanges().forEach((change) => {
-      if (change.type === 'added') {
-        const candidate = new RTCIceCandidate(change.doc.data());
-        pc.addIceCandidate(candidate);
+function sendData2() {
+  const file = fileInput.files[0];
+  statusMessage.textContent = '';
+  //downloadAnchor.textContent = '';
+  if (file.size === 0) {
+    bitrateDiv.innerHTML = '';
+    statusMessage.textContent = 'File is empty, please select a non-empty file';
+     return;
+  }
+	
+  pacer = 1;
+  sendProgress.max = file.size;
+  var details = `${[file.name, file.size, file.type, file.lastModified].join('~')}`;
+  
+  const chunkSize = 16430;
+  fileReader = new FileReader();
+  let offset = 0;
+  dataChannel2.send(details);
+  
+  fileReader.addEventListener('error', error => console.error('Error reading file:', error));
+  fileReader.addEventListener('abort', event => console.log('File reading aborted:', event));
+  fileReader.addEventListener('load', sendChunk);
+                              
+    async function sendChunk(event) {
+    //console.log('FileRead.onload ', e);   
+	   await sleep(1);
+    dataChannel2.send(event.target.result);
+     
+	//pacer += 1;
+	    
+	    await sleep(1);
+	/*
+    if (pacer == 1024){
+		await sleep(50);
+		buffer();
+		pacer = 0;
+	}
+	*/
+    offset += event.target.result.byteLength;
+    sendProgress.value = offset;
+    if (offset < file.size) {
+      readSlice(offset);
+	    //await sleep(5);
+    }else{
+	    pacer = 0;
+  	    sendProgress.value = 0;
+    }
+  };
+  
+  async function readSlice(offsetValue) {
+      //console.log('readSlice ', o);
+	  return new Promise(resolve => {
+		  const slice = file.slice(offset, (offsetValue + chunkSize));
+		  resolve(fileReader.readAsArrayBuffer(slice));
+	  });
+  };
+  readSlice(0);
+	
+}
+
+async function buffer(){
+	//console.log('buffering');
+    return new Promise(resolve => {
+	    if (dataChannel) {
+		dataChannel.close();
+	    dataChannel = null;
+	    };
+dataChannel = peerConnection.createDataChannel('sendDataChannel', {maxPacketLifeTime: 32768}); //, {negotiated: true, id: 0}); //, {maxRetransmits: 1048576});
+	dataChannel.binaryType = 'arraybuffer';
+  //console.log('Created send data channel');
+	dataChannel.onmessage = onReceiveMessageCallback;
+	dataChannel.onopen = ondataChannelStateChange;
+	dataChannel.onclose = ondataChannelStateChange;
+	dataChannel.error = onError;
+	})
+  }
+
+async function buffer2(){
+	//console.log('buffering');
+    return new Promise(resolve => {
+	    if (dataChannel2) {
+		dataChannel2.close();
+	    dataChannel2 = null;
+	    };
+dataChannel2 = peerConnection.createDataChannel('sendDataChannel', {maxPacketLifeTime: 32768}); //, {negotiated: true, id: 1}); //, {maxRetransmits: 1048576});
+	dataChannel2.binaryType = 'arraybuffer';
+  //console.log('Created send data channel');
+	dataChannel2.onmessage = onReceiveMessageCallback;
+	dataChannel2.onopen = ondataChannelStateChange2;
+	dataChannel2.onclose = ondataChannelStateChange2;
+	dataChannel2.error = onError2;
+	})
+  }
+
+
+function retry() {
+	
+	buffer();
+	
+	handling();
+	
+}
+
+function retry2() {
+	
+	buffer2();
+	
+	handling2();
+	
+}
+
+
+const sleep = (milliseconds) => {
+	//console.log('sleeping');
+  return new Promise(resolve => setTimeout(resolve, milliseconds))
+}
+async function handling(){
+	//console.log('buffering');
+    return new Promise(resolve => {
+	    
+	    if (dataChannel) {
+		dataChannel.close();
+	    dataChannel = null;
+	    };
+	dataChannel = event.channel;
+	dataChannel.binaryType = 'arraybuffer';
+  //console.log('Created send data channel');
+	dataChannel.onmessage = onReceiveMessageCallback;
+	dataChannel.onopen = ondataChannelStateChange;
+	dataChannel.onclose = ondataChannelStateChange;
+	dataChannel.error = onError;
+	})
+  }
+
+async function handling2(){
+	//console.log('buffering');
+    return new Promise(resolve => {
+	    
+	    if (dataChannel2) {
+		dataChannel2.close();
+	    dataChannel2 = null;
+	    };
+	dataChannel2 = event.channel;
+	dataChannel2.binaryType = 'arraybuffer';
+  //console.log('Created send data channel');
+	dataChannel2.onmessage = onReceiveMessageCallback;
+	dataChannel2.onopen = ondataChannelStateChange2;
+	dataChannel2.onclose = ondataChannelStateChange2;
+	dataChannel2.error = onError2;
+	})
+  }
+
+function closeDataChannels() {
+  console.log('Closing data channels');
+  if (dataChannel) {
+  dataChannel.close();
+  console.log(`Closed data channel with label: ${dataChannel.label}`);
+  dataChannel = null;
+  peerConnection.close();
+  peerConnection = null;
+  }
+  if (dataChannel2) {
+    dataChannel2.close();
+    console.log(`Closed data channel with label: ${dataChannel2.label}`);
+    dataChannel2 = null;
+    peerConnection.close();
+    peerConnection = null;
+  }
+  
+  console.log('Closed peer connections');
+  // re-enable the file select
+  fileInput.disabled = false;
+  abortButton.disabled = true;
+  document.querySelector('button#sendFile').disabled = false;
+}
+
+async function gotLocalDescription(desc) {
+  await peerConnection.setLocalDescription(desc);
+  console.log(`Offer from localConnection\n ${desc.sdp}`);
+  await peerConnection.setRemoteDescription(desc);
+  try {
+    const answer = await peerConnection.createAnswer();
+    await gotRemoteDescription(answer);
+  } catch (e) {
+    console.log('Failed to create session description: ', e);
+  }
+}
+async function gotRemoteDescription(desc) {
+  await peerConnection.setLocalDescription(desc);
+  console.log(`Answer from remoteConnection\n ${desc.sdp}`);
+  await peerConnection.setRemoteDescription(desc);
+}
+
+function dataChannelCallback(event) {
+  //console.log('Receive Channel Callback');
+  
+  dataChannel = event.channel;
+  dataChannel.binaryType = 'arraybuffer';
+  dataChannel.onmessage = onReceiveMessageCallback;
+  dataChannel.onopen = onReceiveChannelStateChange;
+  dataChannel.onclose = onReceiveChannelStateChange;
+  if(sending == 0){
+	  receivedSize = 0;
+	  bitrateMax = 0;
+	  //downloadAnchor.textContent = '';
+	  bitrateDiv.innerHTML = '';
+	  /*downloadAnchor.removeAttribute('download');
+	  if (downloadAnchor.href) {
+		URL.revokeObjectURL(downloadAnchor.href);
+		downloadAnchor.removeAttribute('href');
+	  }*/
+  }
+}
+
+function dataChannelCallback2(event) {
+  //console.log('Receive Channel Callback');
+  
+  dataChannel2 = event.channel;
+  dataChannel2.binaryType = 'arraybuffer';
+  dataChannel2.onmessage = onReceiveMessageCallback;
+  dataChannel2.onopen = onReceiveChannelStateChange2;
+  dataChannel2.onclose = onReceiveChannelStateChange2;
+  if(sending == 0){
+	  receivedSize = 0;
+	  bitrateMax = 0;
+	  //downloadAnchor.textContent = '';
+	  bitrateDiv.innerHTML = '';
+	  /*downloadAnchor.removeAttribute('download');
+	  if (downloadAnchor.href) {
+		URL.revokeObjectURL(downloadAnchor.href);
+		downloadAnchor.removeAttribute('href');
+	  }*/
+  }
+}
+
+async function onReceiveMessageCallback(event) {
+ 
+  //sending = 1;
+  
+  if(sending !== 1){
+    //downloadAnchor.textContent = '';
+    bitrateDiv.innerHTML = '';
+    timestampStart = (new Date()).getTime();
+    timestampPrev = timestampStart;
+    statsInterval = setInterval(displayStats, 500);
+    await displayStats();
+  };
+	
+  sending = 1;
+	
+  //console.log(`Received Message ${event.data.byteLength}`);
+  receiveBuffer.push(event.data);
+  
+  var fileDetails = receiveBuffer[0];
+  var parts = fileDetails.split('~');
+  var info = {name: parts[0], size: Number(parts[1]), type: parts[2], lastModified: Number(parts[3])};
+  
+  receiveProgress.max = info.size;
+  if (receiveBuffer.length !== 1) {
+  receivedSize += Number(`${event.data.byteLength}`);
+  receiveProgress.value = receivedSize;
+  }
+  let file = info;
+ 
+  if (receivedSize === file.size) {
+    receiveBuffer.shift();
+  
+    const received = new Blob(receiveBuffer);
+    receiveBuffer = [];
+	  
+    downloadAnchor = document.createElement('a');
+    downloadAnchor.href = URL.createObjectURL(received);
+    downloadAnchor.download = file.name;
+    downloadAnchor.textContent =
+      `Click to download '${file.name}' (${file.size} bytes)`;
+    downloadAnchor.style.display = 'block';
+	  
+    document.getElementById('download').prepend(downloadAnchor);
+    const bitrate = Math.round(receivedSize * 8 /
+      ((new Date()).getTime() - timestampStart));
+    averageBitrateDiv.innerHTML =
+      `<strong>Average Bitrate:</strong> ${bitrate} kbits/sec (max: ${bitrateMax} kbits/sec)`;
+    if (statsInterval) {
+      clearInterval(statsInterval);
+      statsInterval = null;
+    }
+    fileDetails = '';
+    bitrateMax = 0;
+    receiveBuffer.length = 0;
+    receivedSize = 0;
+    parts.length = 0;
+    info = '';
+	  receiveProgress.value = receivedSize;
+	sending = 0;
+	//URL.revokeObjectURL(downloadAnchor.href);
+	//downloadAnchor.removeAttribute('href');
+  }
+}
+
+async function ondataChannelStateChange() {
+	if(sending == 0){
+  if (dataChannel) {
+    const {readyState} = dataChannel;
+    console.log(`Send channel state is: ${readyState}`);
+    if (readyState === 'open') {
+      chatlog('Connected');
+		  timestampStart = (new Date()).getTime();
+		  timestampPrev = timestampStart;
+		  statsInterval = setInterval(displayStats, 500);
+		  await displayStats();
+    }else{
+      chatlog('Disconnected');
+	    if(pacer == 1){buffer()};
+    }
+    if(pacer == 1){buffer()};
+  }
+	if(pacer == 1){buffer()};
+}
+
+}
+
+async function ondataChannelStateChange2() {
+	if(sending == 0){
+  if (dataChannel2) {
+    const {readyState} = dataChannel2;
+    console.log(`Send channel state is: ${readyState}`);
+    if (readyState === 'open') {
+      chatlog('Connected');
+		  timestampStart = (new Date()).getTime();
+		  timestampPrev = timestampStart;
+		  statsInterval = setInterval(displayStats, 500);
+		  await displayStats();
+    }else{
+      chatlog('Disconnected');
+	    if(pacer == 1){buffer2()};
+    }
+    if(pacer == 1){buffer2()};
+  }
+	if(pacer == 1){buffer2()};
+}
+
+}
+
+function onError(error) {
+  if (dataChannel) {
+    console.error('Error in sendChannel:', error);
+    return;
+  }
+  console.log('Error in sendChannel which is already closed:', error);
+	if(pacer == 1){buffer()};
+}
+
+function onError2(error) {
+  if (dataChannel2) {
+    console.error('Error in sendChannel:', error);
+    return;
+  }
+  console.log('Error in sendChannel which is already closed:', error);
+	if(pacer == 1){buffer2()};
+}
+
+async function onReceiveChannelStateChange() {
+	if(sending == 0){
+	  if (dataChannel) {
+		const readyState = dataChannel.readyState;
+		console.log(`Receive channel state is: ${readyState}`);
+		if (readyState === 'open') {
+			chatlog('Connected');
+		  timestampStart = (new Date()).getTime();
+		  timestampPrev = timestampStart;
+		  statsInterval = setInterval(displayStats, 500);
+		  await displayStats();
+	
+    }else{
+      chatlog('Disconnected');
+	    if(pacer == 1){buffer()};
+    }
+    if(pacer == 1){buffer()};
+  }
+	if(pacer == 1){buffer()};
+}
+}
+
+async function onReceiveChannelStateChange2() {
+	if(sending == 0){
+	  if (dataChannel2) {
+		const readyState = dataChannel2.readyState;
+		console.log(`Receive channel state is: ${readyState}`);
+		if (readyState === 'open') {
+			chatlog('Connected');
+		  timestampStart = (new Date()).getTime();
+		  timestampPrev = timestampStart;
+		  statsInterval = setInterval(displayStats, 500);
+		  await displayStats();
+	
+    }else{
+      chatlog('Disconnected');
+	    if(pacer == 1){buffer2()};
+    }
+    if(pacer == 1){buffer2()};
+  }
+	if(pacer == 1){buffer2()};
+}
+}
+
+// display bitrate statistics.
+async function displayStats() {
+  if (peerConnection && peerConnection.iceConnectionState === 'connected') {
+    const stats = await peerConnection.getStats();
+    let activeCandidatePair;
+    stats.forEach(report => {
+      if (report.type === 'transport') {
+        activeCandidatePair = stats.get(report.selectedCandidatePairId);
       }
     });
-  });
-  hangupButton.disabled = false;
-};
-
-// 3. Answer the call with the unique ID
-answerButton.onclick = async () => {
-  //const callId = callInput.value;
-  if(callId == 0){
-        callId = prompt('Please enter call ID','');
-        };
-  const callDoc = firestore.collection('calls').doc(callId);
-  const answerCandidates = callDoc.collection('answerCandidates');
-  const offerCandidates = callDoc.collection('offerCandidates');
-
-  //pc.onicecandidate = ({candidate}) => signaler.send({candidate});
-        
-  pc.onicecandidate = (event) => {
-    event.candidate && answerCandidates.add(event.candidate.toJSON());
-  };
-
-  const callData = (await callDoc.get()).data();
-
-  const offerDescription = callData.offer;
-  await pc.setRemoteDescription(new RTCSessionDescription(offerDescription));
-
-  const answerDescription = await pc.createAnswer();
-  await pc.setLocalDescription(answerDescription);
-
-  const description = callData.offer;
-/*  
-  let ignoreOffer = false;
-
-signaler.onmessage = async ({ data: { description, candidate } }) => {
-  try {
-    if (description) {
-      const offerCollision = (description.type == "offer") &&
-                             (makingOffer || pc.signalingState != "stable");
-
-      ignoreOffer = !polite && offerCollision;
-      if (ignoreOffer) {
+    if (activeCandidatePair) {
+      if (timestampPrev === activeCandidatePair.timestamp) {
         return;
       }
-
-      await pc.setRemoteDescription(description);
-      if (description.type == "offer") {
-        await pc.setLocalDescription();
-        signaler.send({ description: pc.localDescription })
-      }
-    } else if (candidate) {
-      try {
-        await pc.addIceCandidate(candidate);
-      } catch(err) {
-        if (!ignoreOffer) {
-          throw err;
-        }
+      // calculate current bitrate
+      const bytesNow = activeCandidatePair.bytesReceived;
+      const bitrate = Math.round((bytesNow - bytesPrev) * 8 /
+        (activeCandidatePair.timestamp - timestampPrev));
+      bitrateDiv.innerHTML = `<strong>Current Bitrate:</strong> ${bitrate} kbits/sec`;
+      timestampPrev = activeCandidatePair.timestamp;
+      bytesPrev = bytesNow;
+      if (bitrate > bitrateMax) {
+        bitrateMax = bitrate;
       }
     }
-  } catch(err) {
-    console.error(err);
   }
 }
-      */  
-  const answer = {
-    type: answerDescription.type,
-    sdp: answerDescription.sdp,
-  };
-
-  await callDoc.update({ answer });
-    
-    //callerId = callId;
-
-  offerCandidates.onSnapshot((snapshot) => {
-    snapshot.docChanges().forEach((change) => {
-      console.log(change);
-      if (change.type === 'added') {
-        let data = change.doc.data();
-        pc.addIceCandidate(new RTCIceCandidate(data));
-      }
-    });
-  });
-};
-  
-function hangup() {
-  
-  };
-
-switchCameraButton.onclick = async () => {
-  const vid = localStream.getTracks();
-  vid[1].applyConstraints({facingMode: "environment"});
-  }
-
