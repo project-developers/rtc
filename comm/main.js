@@ -73,8 +73,8 @@ webcamButton.onclick = async () => {
   });
   
   const [audioReceiver, videoReceiver] = pc.getReceivers();
-  audioReceiver.playoutDelayHint = 0.5;
-  videoReceiver.playoutDelayHint = 0.5;
+  audioReceiver.playoutDelayHint = 0.0;
+  videoReceiver.playoutDelayHint = 0.0;
   // Pull tracks from remote stream, add to video stream
   pc.ontrack = (event) => {
     event.streams[0].getTracks().forEach((track) => {
@@ -233,9 +233,9 @@ navigator.mediaDevices
   })
   .then(function(stream) {
   localStream = stream;
-  //webcamVideo.srcObject = null;
-  //webcamVideo.srcObject = stream;
-  //webcamVideo.play();
+  webcamVideo.srcObject = null;
+  webcamVideo.srcObject = localStream;
+  webcamVideo.play();
     let videoTrack = stream.getVideoTracks()[0];
  //   PCs.forEach(function(pc) {
       var sender = pc.getSenders().find(function(s) {
@@ -258,9 +258,9 @@ navigator.mediaDevices
   })
   .then(function(stream) {
     localStream = stream;
-  //webcamVideo.srcObject = null;
-  //webcamVideo.srcObject = stream;
-  //webcamVideo.play();
+  webcamVideo.srcObject = null;
+  webcamVideo.srcObject = localStream;
+  webcamVideo.play();
     let videoTrack = stream.getVideoTracks()[0];
  //   PCs.forEach(function(pc) {
       var sender = pc.getSenders().find(function(s) {
