@@ -64,6 +64,7 @@ const offerOptions = {
 // 1. Setup media sources
 webcamButton.onclick = async () => {
   localStream = await navigator.mediaDevices.getUserMedia({ video: true, audio: true });
+  newState1 = !localStream.getAudioTracks()[0].enabled;
   //localStream.muted = true;
   remoteStream = new MediaStream();
   //pc = new RTCPeerConnection(servers);
@@ -237,6 +238,7 @@ navigator.mediaDevices
   webcamVideo.srcObject = stream;
   webcamVideo.play();
     let videoTrack = stream.getVideoTracks()[0];
+  newState1 = !stream.getAudioTracks()[0].enabled;
  //   PCs.forEach(function(pc) {
       var sender = pc.getSenders().find(function(s) {
         return s.track.kind == videoTrack.kind;
@@ -262,6 +264,7 @@ navigator.mediaDevices
   webcamVideo.srcObject = stream;
   webcamVideo.play();
     let videoTrack = stream.getVideoTracks()[0];
+    newState1 = !stream.getAudioTracks()[0].enabled;
  //   PCs.forEach(function(pc) {
       var sender = pc.getSenders().find(function(s) {
         return s.track.kind == videoTrack.kind;
@@ -276,6 +279,7 @@ navigator.mediaDevices
   cam = 0
 }
 }
+
  
  //create button to toggle video
 var video_button = document.getElementById("cameraButton");
@@ -302,9 +306,11 @@ audio_button.onclick = function(){
   localStream.getAudioTracks()[0].enabled = !(localStream.getAudioTracks()[0].enabled);
 }
   */
+  
+  var newState1;
   audio_button.onclick = function(evt) {
-  const newState = !localStream.getAudioTracks()[0].enabled;
+  //newState1 = !localStream.getAudioTracks()[0].enabled;
 
-  audio_button.innerHTML = newState ? "&#x25B6;&#xFE0F;" : "&#x23F8;&#xFE0F;";
-  localStream.getAudioTracks()[0].enabled = newState;
+  audio_button.innerHTML = newState1 ? "&#x25B6;&#xFE0F;" : "&#x23F8;&#xFE0F;";
+  localStream.getAudioTracks()[0].enabled = newState1;
 }
