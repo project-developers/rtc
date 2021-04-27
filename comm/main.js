@@ -19,7 +19,7 @@ const servers = {
 let pc = new RTCPeerConnection(servers);
 let localStream = null;
 let remoteStream = null;
-let newStream = null;
+let newStream;
 // Here |pc| represent peer connection
 // with remote audio and video streams attached.
 //let pc = new RTCPeerConnection();
@@ -28,7 +28,6 @@ let newStream = null;
 // Add additional 500 milliseconds of buffering.
 //audioReceiver.playoutDelayHint = 0.5;
 //videoReceiver.playoutDelayHint = 0.5;
-
  // HTML elements
  const webcamButton = document.getElementById('webcamButton');
  const switchCameraButton = document.getElementById('switchCameraButton');
@@ -73,8 +72,8 @@ webcamButton.onclick = async () => {
   });
   
   const [audioReceiver, videoReceiver] = pc.getReceivers();
-  audioReceiver.playoutDelayHint = 0.0;
-  videoReceiver.playoutDelayHint = 0.0;
+  audioReceiver.playoutDelayHint = 0.5;
+  videoReceiver.playoutDelayHint = 0.5;
   // Pull tracks from remote stream, add to video stream
   pc.ontrack = (event) => {
     event.streams[0].getTracks().forEach((track) => {
@@ -103,13 +102,13 @@ callButton.onclick = async () => {
   // Get candidates for caller, save to db
   pc.onicecandidate = (event) => {
     event.candidate && offerCandidates.add(event.candidate.toJSON());
-  };
-  // Create offer
-  const offerDescription = await pc.createOffer();
-  
-  await pc.setLocalDescription(offerDescription);
-  const offer = {
-    sdp: offerDescription.sdp,
+   };
+   // Create offer
+   const offerDescription = await pc.createOffer();
+   
+   await pc.setLocalDescription(offerDescription);
+   const offer = {
+     sdp: offerDescription.sdp,
     type: offerDescription.type,
   };
   await callDoc.set({ offer });
@@ -151,13 +150,14 @@ answerButton.onclick = async () => {
   const callData = (await callDoc.get()).data();
   const offerDescription = callData.offer;
   await pc.setRemoteDescription(new RTCSessionDescription(offerDescription));
-  const answerDescription = await pc.createAnswer();
-  await pc.setLocalDescription(answerDescription);
-  const description = callData.offer;
+   const answerDescription = await pc.createAnswer();
+   await pc.setLocalDescription(answerDescription);
+   const description = callData.offer;
 
-  const answer = {
-    type: answerDescription.type,
-    sdp: answerDescription.sdp,
+
+   const answer = {
+     type: answerDescription.type,
+     sdp: answerDescription.sdp,
   };
   await callDoc.update({ answer });
     
@@ -174,7 +174,6 @@ answerButton.onclick = async () => {
 };
   
 function hangup() {
-
    };
   
 var cam = 0;
@@ -182,52 +181,14 @@ let newVideo = null;
 let videoTrack = null;
 let sender = null;
   
- /*
- switchCameraButton.onclick = async () => {
+ 
    // example to change video camera, suppose selected value saved into window.selectedCamera
-if(cam == 0){
- if(newStream){
-   const tracks = newStream.getTracks();
-tracks.forEach(track => track.stop());
- }
-   newStream = await navigator.mediaDevices.getUserMedia({ video: {facingMode: 'environment'}, audio: false }); // Or 'environment'user
-   newVideo = newStream.getVideoTracks()[0];
-   videoTrack = localStream.getVideoTracks()[0];
-   sender = pc.getSenders().find(function(s) {
-        return s.track.kind == videoTrack.kind;
-      });
-      console.log('found sender:', sender);
-      sender.replaceTrack(newVideo);
-   webcamVideo.srcObject = newStream;
-   //webcamVideo.muted = true;
-  cam = 1
-}else{
-  if(newStream){
-   const tracks = newStream.getTracks();
-tracks.forEach(track => track.stop());
- }
-newStream = await navigator.mediaDevices.getUserMedia({ video: {facingMode: 'user'}, audio: false }); // Or 'environment'user
-   newVideo = newStream.getVideoTracks()[0];
-   videoTrack = localStream.getVideoTracks()[0];
-   sender = pc.getSenders().find(function(s) {
-        return s.track.kind == videoTrack.kind;
-      });
-      console.log('found sender:', sender);
-      sender.replaceTrack(newVideo);
-   webcamVideo.srcObject = newStream;
-  // webcamVideo.muted = true;
-  cam = 0
-}
- }
- */
-  
-  // example to change video camera, suppose selected value saved into window.selectedCamera
 
-switchCameraButton.onclick = async () => {
-  if(cam == 0){
-navigator.mediaDevices
-  .getUserMedia({
-    video: {
+ switchCameraButton.onclick = async () => {
+   if(cam == 0){
+ navigator.mediaDevices
+   .getUserMedia({
+     video: {
       facingMode: 'environment'
     }
   })
@@ -244,42 +205,41 @@ navigator.mediaDevices
       sender.replaceTrack(videoTrack);
    // });
   })
-  .catch(function(err) {
-    console.error('Error happens:', err);
-  });
-  cam = 1
-}else{
-  navigator.mediaDevices
-  .getUserMedia({
-    video: {
-      facingMode: 'user'
-    }
-  })
-  .then(function(stream) {
-  webcamVideo.srcObject = null;
-  webcamVideo.srcObject = stream;
-  webcamVideo.play();
-    let videoTrack = stream.getVideoTracks()[0];
- //   PCs.forEach(function(pc) {
-      var sender = pc.getSenders().find(function(s) {
-        return s.track.kind == videoTrack.kind;
-      });
-      console.log('found sender:', sender);
-      sender.replaceTrack(videoTrack);
-   // });
-  })
-  .catch(function(err) {
-    console.error('Error happens:', err);
-  });
-  cam = 0
-}
-}
+   .catch(function(err) {
+     console.error('Error happens:', err);
+   });
 
- 
- //create button to toggle video
+   cam = 1
+ }else{
+   navigator.mediaDevices
+   .getUserMedia({
+     video: {
+       facingMode: 'user'
+     }
+   })
+   .then(function(stream) {
+   webcamVideo.srcObject = null;
+   webcamVideo.srcObject = stream;
+   webcamVideo.play();
+     let videoTrack = stream.getVideoTracks()[0];
+  //   PCs.forEach(function(pc) {
+       var sender = pc.getSenders().find(function(s) {
+         return s.track.kind == videoTrack.kind;
+       });
+       console.log('found sender:', sender);
+       sender.replaceTrack(videoTrack);
+    // });
+   })
+   .catch(function(err) {
+     console.error('Error happens:', err);
+   });
+   cam = 0
+ }
+ }
+
+  //create button to toggle video
 var video_button = document.getElementById("cameraButton");
 //video_button.appendChild(document.createTextNode("Toggle hold"));
-
 video_button.onclick = function(){
   if(video_button.innerText == "Camera Off"){
     video_button.innerText = "Camera On"
@@ -288,7 +248,6 @@ video_button.onclick = function(){
   };
   localStream.getVideoTracks()[0].enabled = !(localStream.getVideoTracks()[0].enabled);
 }
-  
 var audio_button = document.getElementById("muteButton");
 //video_button.appendChild(document.createTextNode("Toggle hold"));
 /*
@@ -301,11 +260,8 @@ audio_button.onclick = function(){
   localStream.getAudioTracks()[0].enabled = !(localStream.getAudioTracks()[0].enabled);
 }
   */
-  
-  
   audio_button.onclick = function(evt) {
   const newState = !localStream.getAudioTracks()[0].enabled;
-
   audio_button.innerHTML = newState ? "&#x25B6;&#xFE0F;" : "&#x23F8;&#xFE0F;";
   localStream.getAudioTracks()[0].enabled = newState;
 }
