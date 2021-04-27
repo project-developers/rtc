@@ -302,7 +302,7 @@ video_button.onclick = function(){
 
 var audio_button = document.getElementById("muteButton");
 //video_button.appendChild(document.createTextNode("Toggle hold"));
-
+/*
 audio_button.onclick = function(){
   if(audio_button.innerText == "Mute"){
     audio_button.innerText = "Unmute"
@@ -310,4 +310,11 @@ audio_button.onclick = function(){
   audio_button.innerText = "Mute"
   };
   localStream.getAudioTracks()[0].enabled = !(localStream.getAudioTracks()[0].enabled);
+}
+  */
+  audio_button.onclick = function(evt) {
+  const newState = !localStream.getAudioTracks()[0].enabled;
+
+  audio_button.innerHTML = newState ? "&#x25B6;&#xFE0F;" : "&#x23F8;&#xFE0F;";
+  localStream.getAudioTracks()[0].enabled = newState;
 }
