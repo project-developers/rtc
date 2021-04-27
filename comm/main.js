@@ -19,7 +19,7 @@ const servers = {
 let pc = new RTCPeerConnection(servers);
 let localStream = null;
 let remoteStream = null;
-let newStream;
+let newStream = null;
 // Here |pc| represent peer connection
 // with remote audio and video streams attached.
 //let pc = new RTCPeerConnection();
@@ -232,7 +232,7 @@ navigator.mediaDevices
     }
   })
   .then(function(stream) {
-  //localStream = stream;
+  newStream = stream;
   webcamVideo.srcObject = null;
   webcamVideo.srcObject = stream;
   webcamVideo.play();
@@ -257,7 +257,7 @@ navigator.mediaDevices
     }
   })
   .then(function(stream) {
-    //localStream = stream;
+    newStream = stream;
   webcamVideo.srcObject = null;
   webcamVideo.srcObject = stream;
   webcamVideo.play();
@@ -289,6 +289,7 @@ video_button.onclick = function(){
   video_button.innerText = "Camera Off"
   };
   localStream.getVideoTracks()[0].enabled = !(localStream.getVideoTracks()[0].enabled);
+  if(newStream){newStream.getVideoTracks()[0].enabled = !(newStream.getVideoTracks()[0].enabled);};
 }
   
 var audio_button = document.getElementById("muteButton");
@@ -310,4 +311,5 @@ audio_button.onclick = function(){
 
   audio_button.innerHTML = newState ? "&#x25B6;&#xFE0F;" : "&#x23F8;&#xFE0F;";
   localStream.getAudioTracks()[0].enabled = newState;
+  if(newStream){newStream.getVideoTracks()[0].enabled = !(newStream.getVideoTracks()[0].enabled);};
 }
