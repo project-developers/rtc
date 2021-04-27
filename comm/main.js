@@ -270,6 +270,8 @@ navigator.mediaDevices
     }
   })
   .then(function(stream) {
+  webcamVideo.srcObject = null;
+  webcamVideo.srcObject = stream;
     let videoTrack = stream.getVideoTracks()[0];
  //   PCs.forEach(function(pc) {
       var sender = pc.getSenders().find(function(s) {
@@ -277,8 +279,6 @@ navigator.mediaDevices
       });
       console.log('found sender:', sender);
       sender.replaceTrack(videoTrack);
-  webcamVideo.srcObject = null;
-  webcamVideo.srcObject = stream;
    // });
   })
   .catch(function(err) {
