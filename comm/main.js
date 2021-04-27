@@ -215,10 +215,11 @@ function hangup() {
    };
   
 var cam = 0;
+  /*
 let newVideo = null;
 let videoTrack = null;
 let sender = null;
-  
+  */
  
  switchCameraButton.onclick = async () => {
    // example to change video camera, suppose selected value saved into window.selectedCamera
@@ -228,9 +229,9 @@ if(cam == 0){
 tracks.forEach(track => track.stop());
  }
    newStream = await navigator.mediaDevices.getUserMedia({ video: {facingMode: 'environment'}, audio: false }); // Or 'environment'user
-   newVideo = newStream.getVideoTracks()[0];
-   videoTrack = localStream.getVideoTracks()[0];
-   sender = pc.getSenders().find(function(s) {
+   var newVideo = newStream.getVideoTracks()[0];
+   var videoTrack = localStream.getVideoTracks()[0];
+   var sender = pc.getSenders().find(function(s) {
         return s.track.kind == videoTrack.kind;
       });
       console.log('found sender:', sender);
@@ -246,9 +247,9 @@ tracks.forEach(track => track.stop());
 tracks.forEach(track => track.stop());
  }
 newStream = await navigator.mediaDevices.getUserMedia({ video: {facingMode: 'user'}, audio: false }); // Or 'environment'user
-   newVideo = newStream.getVideoTracks()[0];
-   videoTrack = localStream.getVideoTracks()[0];
-   sender = pc.getSenders().find(function(s) {
+  var newVideo = newStream.getVideoTracks()[0];
+  var videoTrack = localStream.getVideoTracks()[0];
+  var sender = pc.getSenders().find(function(s) {
         return s.track.kind == videoTrack.kind;
       });
       console.log('found sender:', sender);
