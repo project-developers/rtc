@@ -232,9 +232,9 @@ navigator.mediaDevices
     }
   })
   .then(function(stream) {
-  localStream = stream;
+  //localStream = stream;
   webcamVideo.srcObject = null;
-  webcamVideo.srcObject = localStream;
+  webcamVideo.srcObject = stream;
   webcamVideo.play();
     let videoTrack = stream.getVideoTracks()[0];
  //   PCs.forEach(function(pc) {
@@ -257,9 +257,9 @@ navigator.mediaDevices
     }
   })
   .then(function(stream) {
-    localStream = stream;
+    //localStream = stream;
   webcamVideo.srcObject = null;
-  webcamVideo.srcObject = localStream;
+  webcamVideo.srcObject = stream;
   webcamVideo.play();
     let videoTrack = stream.getVideoTracks()[0];
  //   PCs.forEach(function(pc) {
