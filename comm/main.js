@@ -215,10 +215,13 @@ signaler.onmessage = async ({ data: { description, candidate } }) => {
 function hangup() {
 
    };
+  
 var cam = 0;
 let newVideo = null;
 let videoTrack = null;
 let sender = null;
+  
+ /*
  switchCameraButton.onclick = async () => {
    // example to change video camera, suppose selected value saved into window.selectedCamera
 if(cam == 0){
@@ -255,6 +258,33 @@ newStream = await navigator.mediaDevices.getUserMedia({ video: {facingMode: 'use
   cam = 0
 }
  }
+ */
+  
+  // example to change video camera, suppose selected value saved into window.selectedCamera
+
+switchCameraButton.onclick = async () => {
+navigator.mediaDevices
+  .getUserMedia({
+    video: {
+      deviceId: {
+        exact: window.selectedCamera
+      }
+    }
+  })
+  .then(function(stream) {
+    let videoTrack = stream.getVideoTracks()[0];
+ //   PCs.forEach(function(pc) {
+      var sender = pc.getSenders().find(function(s) {
+        return s.track.kind == videoTrack.kind;
+      });
+      console.log('found sender:', sender);
+      sender.replaceTrack(videoTrack);
+   // });
+  })
+  .catch(function(err) {
+    console.error('Error happens:', err);
+  });
+}
  
  //create button to toggle video
 var video_button = document.getElementById("cameraButton");
