@@ -254,9 +254,9 @@ video_button.onclick = function(){
 }
   */
 video_button.onclick = function(evt) {
-  const newState = !localStream.getVideoTracks()[0].enabled;
-  video_button.innerHTML = newState ? "&#x25B6;&#xFE0F;" : "&#x23F8;&#xFE0F;";
-  localStream.getVideoTracks()[0].enabled = newState;
+  const newState1 = !localStream.getVideoTracks()[0].enabled;
+  video_button.innerHTML = newState1 ? "&#x25B6;&#xFE0F;" : "&#x23F8;&#xFE0F;";
+  localStream.getVideoTracks()[0].enabled = newState1;
 }
   
 var audio_button = document.getElementById("muteButton");
