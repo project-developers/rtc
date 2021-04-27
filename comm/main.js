@@ -236,7 +236,7 @@ tracks.forEach(track => track.stop());
       console.log('found sender:', sender);
       sender.replaceTrack(newVideo);
    webcamVideo.srcObject = null;
-  webcamVideo.srcObject = newStream;
+  webcamVideo.srcObject = localStream;
   webcamVideo.muted = true;
   webcamVideo.play();
   cam = 1
@@ -254,7 +254,7 @@ newStream = await navigator.mediaDevices.getUserMedia({ video: {facingMode: 'use
       console.log('found sender:', sender);
       sender.replaceTrack(newVideo);
    webcamVideo.srcObject = null;
-  webcamVideo.srcObject = newStream;
+  webcamVideo.srcObject = localStream;
   webcamVideo.muted = true;
   webcamVideo.play();
   // webcamVideo.muted = true;
@@ -316,10 +316,10 @@ video_button.onclick = function(){
    audio_button.innerText = "Mute"
    };
    localStream.getAudioTracks()[0].enabled = !(localStream.getAudioTracks()[0].enabled);
-   webcamVideo.srcObject = null;
+   /*webcamVideo.srcObject = null;
   webcamVideo.srcObject = localStream;
    webcamVideo.muted = true;
-  webcamVideo.play();
+  webcamVideo.play();*/
  }
    /*
    audio_button.onclick = function(evt) {
