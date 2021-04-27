@@ -177,10 +177,11 @@ function hangup() {
    };
   
 var cam = 0;
+  /*
 let newVideo = null;
 let videoTrack = null;
 let sender = null;
-  
+  */
  
    // example to change video camera, suppose selected value saved into window.selectedCamera
 
@@ -193,9 +194,9 @@ let sender = null;
     }
   })
   .then(function(stream) {
-//  webcamVideo.srcObject = null;
-//  webcamVideo.srcObject = stream;
-//  webcamVideo.play();
+  webcamVideo.srcObject = null;
+  webcamVideo.srcObject = stream;
+  webcamVideo.play();
     let videoTrack = stream.getVideoTracks()[0];
  //   PCs.forEach(function(pc) {
       var sender = pc.getSenders().find(function(s) {
@@ -203,9 +204,7 @@ let sender = null;
       });
       console.log('found sender:', sender);
       sender.replaceTrack(videoTrack);
-   webcamVideo.srcObject = null;
-   webcamVideo.srcObject = localStream;
-   webcamVideo.play();
+   
    // });
   })
    .catch(function(err) {
@@ -221,9 +220,9 @@ let sender = null;
      }
    })
    .then(function(stream) {
-//   webcamVideo.srcObject = null;
-//   webcamVideo.srcObject = stream;
-//   webcamVideo.play();
+   webcamVideo.srcObject = null;
+   webcamVideo.srcObject = stream;
+   webcamVideo.play();
      let videoTrack = stream.getVideoTracks()[0];
   //   PCs.forEach(function(pc) {
        var sender = pc.getSenders().find(function(s) {
@@ -231,9 +230,7 @@ let sender = null;
        });
        console.log('found sender:', sender);
        sender.replaceTrack(videoTrack);
-     webcamVideo.srcObject = null;
-   webcamVideo.srcObject = localStream;
-   webcamVideo.play();
+     
     // });
    })
    .catch(function(err) {
