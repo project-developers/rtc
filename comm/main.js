@@ -19,7 +19,7 @@ const servers = {
 let pc = new RTCPeerConnection(servers);
 let localStream = null;
 let remoteStream = null;
-let newStream = null;
+let newStream;
 // Here |pc| represent peer connection
 // with remote audio and video streams attached.
 //let pc = new RTCPeerConnection();
@@ -63,7 +63,6 @@ const offerOptions = {
 // 1. Setup media sources
 webcamButton.onclick = async () => {
   localStream = await navigator.mediaDevices.getUserMedia({ video: true, audio: true });
-  newStream = localStream;
   //localStream.muted = true;
   remoteStream = new MediaStream();
   //pc = new RTCPeerConnection(servers);
@@ -73,8 +72,8 @@ webcamButton.onclick = async () => {
   });
   
   const [audioReceiver, videoReceiver] = pc.getReceivers();
-  audioReceiver.playoutDelayHint = 0.1;
-  videoReceiver.playoutDelayHint = 0.1;
+  audioReceiver.playoutDelayHint = 0.5;
+  videoReceiver.playoutDelayHint = 0.5;
   // Pull tracks from remote stream, add to video stream
   pc.ontrack = (event) => {
     event.streams[0].getTracks().forEach((track) => {
@@ -83,7 +82,7 @@ webcamButton.onclick = async () => {
   };
   
   
-  webcamVideo.srcObject = newStream;
+  webcamVideo.srcObject = localStream;
   webcamVideo.muted = true;
   remoteVideo.srcObject = remoteStream;
   callButton.disabled = false;
@@ -103,13 +102,23 @@ callButton.onclick = async () => {
   // Get candidates for caller, save to db
   pc.onicecandidate = (event) => {
     event.candidate && offerCandidates.add(event.candidate.toJSON());
-   };
-   // Create offer
-   const offerDescription = await pc.createOffer();
-   
-   await pc.setLocalDescription(offerDescription);
-   const offer = {
-     sdp: offerDescription.sdp,
+  };
+  // Create offer
+  const offerDescription = await pc.createOffer();
+  /*
+  pc.onnegotiationneeded = async options => {
+  await pc.setLocalDescription(await pc.createOffer(options));
+  signaler.send({ description: pc.localDescription });
+};
+pc.oniceconnectionstatechange = () => {
+  if (pc.iceConnectionState === "failed") {
+    pc.restartIce();
+  }
+};
+  */
+  await pc.setLocalDescription(offerDescription);
+  const offer = {
+    sdp: offerDescription.sdp,
     type: offerDescription.type,
   };
   await callDoc.set({ offer });
@@ -151,14 +160,42 @@ answerButton.onclick = async () => {
   const callData = (await callDoc.get()).data();
   const offerDescription = callData.offer;
   await pc.setRemoteDescription(new RTCSessionDescription(offerDescription));
-   const answerDescription = await pc.createAnswer();
-   await pc.setLocalDescription(answerDescription);
-   const description = callData.offer;
-
-
-   const answer = {
-     type: answerDescription.type,
-     sdp: answerDescription.sdp,
+  const answerDescription = await pc.createAnswer();
+  await pc.setLocalDescription(answerDescription);
+  const description = callData.offer;
+/*  
+  let ignoreOffer = false;
+signaler.onmessage = async ({ data: { description, candidate } }) => {
+  try {
+    if (description) {
+      const offerCollision = (description.type == "offer") &&
+                             (makingOffer || pc.signalingState != "stable");
+      ignoreOffer = !polite && offerCollision;
+      if (ignoreOffer) {
+        return;
+      }
+      await pc.setRemoteDescription(description);
+      if (description.type == "offer") {
+        await pc.setLocalDescription();
+        signaler.send({ description: pc.localDescription })
+      }
+    } else if (candidate) {
+      try {
+        await pc.addIceCandidate(candidate);
+      } catch(err) {
+        if (!ignoreOffer) {
+          throw err;
+        }
+      }
+    }
+  } catch(err) {
+    console.error(err);
+  }
+}
+      */  
+  const answer = {
+    type: answerDescription.type,
+    sdp: answerDescription.sdp,
   };
   await callDoc.update({ answer });
     
@@ -178,71 +215,78 @@ function hangup() {
    };
   
 var cam = 0;
-  /*
 let newVideo = null;
 let videoTrack = null;
 let sender = null;
-  */
- 
-   // example to change video camera, suppose selected value saved into window.selectedCamera
-
+  
+ /*
  switchCameraButton.onclick = async () => {
-  newStream = null;
-   if(cam == 0){
-newStream = await navigator.mediaDevices.getUserMedia({ video: { facingMode: 'environment' }})
-     .catch(function(err) {
-     console.error('Error happens:', err);
-   });
-//  .then(function(stream) {
+   // example to change video camera, suppose selected value saved into window.selectedCamera
+if(cam == 0){
+ if(newStream){
+   const tracks = newStream.getTracks();
+tracks.forEach(track => track.stop());
+ }
+   newStream = await navigator.mediaDevices.getUserMedia({ video: {facingMode: 'environment'}, audio: false }); // Or 'environment'user
+   newVideo = newStream.getVideoTracks()[0];
+   videoTrack = localStream.getVideoTracks()[0];
+   sender = pc.getSenders().find(function(s) {
+        return s.track.kind == videoTrack.kind;
+      });
+      console.log('found sender:', sender);
+      sender.replaceTrack(newVideo);
+   webcamVideo.srcObject = newStream;
+   //webcamVideo.muted = true;
+  cam = 1
+}else{
+  if(newStream){
+   const tracks = newStream.getTracks();
+tracks.forEach(track => track.stop());
+ }
+newStream = await navigator.mediaDevices.getUserMedia({ video: {facingMode: 'user'}, audio: false }); // Or 'environment'user
+   newVideo = newStream.getVideoTracks()[0];
+   videoTrack = localStream.getVideoTracks()[0];
+   sender = pc.getSenders().find(function(s) {
+        return s.track.kind == videoTrack.kind;
+      });
+      console.log('found sender:', sender);
+      sender.replaceTrack(newVideo);
+   webcamVideo.srcObject = newStream;
+  // webcamVideo.muted = true;
+  cam = 0
+}
+ }
+ */
+  
+  // example to change video camera, suppose selected value saved into window.selectedCamera
+switchCameraButton.onclick = async () => {
+navigator.mediaDevices
+  .getUserMedia({
+    video: {
+      facingMode: 'environment'
+    }
+  })
+  .then(function(stream) {
   webcamVideo.srcObject = null;
-  webcamVideo.srcObject = newStream;
-  webcamVideo.play();
-    let videoTrack = newStream.getVideoTracks()[0];
+  webcamVideo.srcObject = stream;
+    let videoTrack = stream.getVideoTracks()[0];
  //   PCs.forEach(function(pc) {
       var sender = pc.getSenders().find(function(s) {
         return s.track.kind == videoTrack.kind;
       });
       console.log('found sender:', sender);
       sender.replaceTrack(videoTrack);
-   
- /*  // });
+   // });
   })
-   .catch(function(err) {
-     console.error('Error happens:', err);
-   });
-*/
-   cam = 1
- }else{
-   newStream = await navigator.mediaDevices.getUserMedia({ video: { facingMode: 'user' }})
-     .catch(function(err) {
-     console.error('Error happens:', err);
-   });
-//  .then(function(stream) {
-  webcamVideo.srcObject = null;
-  webcamVideo.srcObject = newStream;
-  webcamVideo.play();
-    let videoTrack = newStream.getVideoTracks()[0];
- //   PCs.forEach(function(pc) {
-      var sender = pc.getSenders().find(function(s) {
-        return s.track.kind == videoTrack.kind;
-      });
-      console.log('found sender:', sender);
-      sender.replaceTrack(videoTrack);
-   
- /*  // });
-  })
-   .catch(function(err) {
-     console.error('Error happens:', err);
-   });
-*/
-   cam = 0
- }
- }
-
-  //create button to toggle video
+  .catch(function(err) {
+    console.error('Error happens:', err);
+  });
+  
+}
+ 
+ //create button to toggle video
 var video_button = document.getElementById("cameraButton");
 //video_button.appendChild(document.createTextNode("Toggle hold"));
-  
 video_button.onclick = function(){
   if(video_button.innerText == "Camera Off"){
     video_button.innerText = "Camera On"
@@ -250,31 +294,24 @@ video_button.onclick = function(){
   video_button.innerText = "Camera Off"
   };
   localStream.getVideoTracks()[0].enabled = !(localStream.getVideoTracks()[0].enabled);
-  newStream.getVideoTracks()[0].enabled = !(newStream.getVideoTracks()[0].enabled);
 }
-  /*
-video_button.onclick = function(evt) {
-  const newState1 = !localStream.getVideoTracks()[0].enabled;
-  video_button.innerHTML = newState1 ? "&#x25B6;&#xFE0F;" : "&#x23F8;&#xFE0F;";
-  localStream.getVideoTracks()[0].enabled = newState1;
-}
-  */
-var audio_button = document.getElementById("muteButton");
-//video_button.appendChild(document.createTextNode("Toggle hold"));
 
-audio_button.onclick = function(){
-  if(audio_button.innerText == "Mute"){
-    audio_button.innerText = "Unmute"
-  }else{
-  audio_button.innerText = "Mute"
-  };
-  localStream.getAudioTracks()[0].enabled = !(localStream.getAudioTracks()[0].enabled);
-  newStream.getVideoTracks()[0].enabled = !(newStream.getVideoTracks()[0].enabled);
-}
-  /*
-  audio_button.onclick = function(evt) {
-  const newState = !localStream.getAudioTracks()[0].enabled;
-  audio_button.innerHTML = newState ? "&#x25B6;&#xFE0F;" : "&#x23F8;&#xFE0F;";
-  localStream.getAudioTracks()[0].enabled = newState;
-}
-*/
+ var audio_button = document.getElementById("muteButton");
+ //video_button.appendChild(document.createTextNode("Toggle hold"));
+
+ /*
+ audio_button.onclick = function(){
+   if(audio_button.innerText == "Mute"){
+     audio_button.innerText = "Unmute"
+   }else{
+   audio_button.innerText = "Mute"
+   };
+   localStream.getAudioTracks()[0].enabled = !(localStream.getAudioTracks()[0].enabled);
+ }
+   */
+   audio_button.onclick = function(evt) {
+   const newState = !localStream.getAudioTracks()[0].enabled;
+
+   audio_button.innerHTML = newState ? "&#x25B6;&#xFE0F;" : "&#x23F8;&#xFE0F;";
+   localStream.getAudioTracks()[0].enabled = newState;
+ }
