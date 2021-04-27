@@ -219,7 +219,7 @@ let newVideo = null;
 let videoTrack = null;
 let sender = null;
   
- /*
+ 
  switchCameraButton.onclick = async () => {
    // example to change video camera, suppose selected value saved into window.selectedCamera
 if(cam == 0){
@@ -235,8 +235,9 @@ tracks.forEach(track => track.stop());
       });
       console.log('found sender:', sender);
       sender.replaceTrack(newVideo);
-   webcamVideo.srcObject = newStream;
-   //webcamVideo.muted = true;
+   webcamVideo.srcObject = null;
+  webcamVideo.srcObject = newStream;
+  webcamVideo.play();
   cam = 1
 }else{
   if(newStream){
@@ -251,13 +252,15 @@ newStream = await navigator.mediaDevices.getUserMedia({ video: {facingMode: 'use
       });
       console.log('found sender:', sender);
       sender.replaceTrack(newVideo);
-   webcamVideo.srcObject = newStream;
+   webcamVideo.srcObject = null;
+  webcamVideo.srcObject = newStream;
+  webcamVideo.play();
   // webcamVideo.muted = true;
   cam = 0
 }
  }
- */
-  
+ 
+/*  
   // example to change video camera, suppose selected value saved into window.selectedCamera
 switchCameraButton.onclick = async () => {
 navigator.mediaDevices
@@ -283,7 +286,7 @@ navigator.mediaDevices
   });
   
 }
- 
+ */
  //create button to toggle video
 var video_button = document.getElementById("cameraButton");
 //video_button.appendChild(document.createTextNode("Toggle hold"));
@@ -294,12 +297,15 @@ video_button.onclick = function(){
   video_button.innerText = "Camera Off"
   };
   localStream.getVideoTracks()[0].enabled = !(localStream.getVideoTracks()[0].enabled);
+  webcamVideo.srcObject = null;
+  webcamVideo.srcObject = localStream;
+  webcamVideo.play();
 }
 
  var audio_button = document.getElementById("muteButton");
  //video_button.appendChild(document.createTextNode("Toggle hold"));
 
- /*
+ 
  audio_button.onclick = function(){
    if(audio_button.innerText == "Mute"){
      audio_button.innerText = "Unmute"
@@ -307,11 +313,15 @@ video_button.onclick = function(){
    audio_button.innerText = "Mute"
    };
    localStream.getAudioTracks()[0].enabled = !(localStream.getAudioTracks()[0].enabled);
+   webcamVideo.srcObject = null;
+  webcamVideo.srcObject = localStream;
+  webcamVideo.play();
  }
-   */
+   /*
    audio_button.onclick = function(evt) {
    const newState = !localStream.getAudioTracks()[0].enabled;
 
    audio_button.innerHTML = newState ? "&#x25B6;&#xFE0F;" : "&#x23F8;&#xFE0F;";
    localStream.getAudioTracks()[0].enabled = newState;
  }
+  */
