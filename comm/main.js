@@ -277,11 +277,14 @@ navigator.mediaDevices
       });
       console.log('found sender:', sender);
       sender.replaceTrack(videoTrack);
+  webcamVideo.srcObject = null;
+  webcamVideo.srcObject = stream;
    // });
   })
   .catch(function(err) {
     console.error('Error happens:', err);
   });
+  
 }
  
  //create button to toggle video
