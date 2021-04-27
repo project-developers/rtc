@@ -232,9 +232,10 @@ navigator.mediaDevices
     }
   })
   .then(function(stream) {
-  webcamVideo.srcObject = null;
-  webcamVideo.srcObject = stream;
-  webcamVideo.play();
+  localStream = stream;
+  //webcamVideo.srcObject = null;
+  //webcamVideo.srcObject = stream;
+  //webcamVideo.play();
     let videoTrack = stream.getVideoTracks()[0];
  //   PCs.forEach(function(pc) {
       var sender = pc.getSenders().find(function(s) {
@@ -256,9 +257,10 @@ navigator.mediaDevices
     }
   })
   .then(function(stream) {
-  webcamVideo.srcObject = null;
-  webcamVideo.srcObject = stream;
-  webcamVideo.play();
+    localStream = stream;
+  //webcamVideo.srcObject = null;
+  //webcamVideo.srcObject = stream;
+  //webcamVideo.play();
     let videoTrack = stream.getVideoTracks()[0];
  //   PCs.forEach(function(pc) {
       var sender = pc.getSenders().find(function(s) {
