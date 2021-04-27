@@ -266,9 +266,7 @@ switchCameraButton.onclick = async () => {
 navigator.mediaDevices
   .getUserMedia({
     video: {
-      deviceId: {
-        exact: window.selectedCamera
-      }
+      facingMode: 'environment'
     }
   })
   .then(function(stream) {
