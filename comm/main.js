@@ -237,6 +237,7 @@ tracks.forEach(track => track.stop());
       sender.replaceTrack(newVideo);
    webcamVideo.srcObject = null;
   webcamVideo.srcObject = newStream;
+  webcamVideo.muted = true;
   webcamVideo.play();
   cam = 1
 }else{
@@ -254,6 +255,7 @@ newStream = await navigator.mediaDevices.getUserMedia({ video: {facingMode: 'use
       sender.replaceTrack(newVideo);
    webcamVideo.srcObject = null;
   webcamVideo.srcObject = newStream;
+  webcamVideo.muted = true;
   webcamVideo.play();
   // webcamVideo.muted = true;
   cam = 0
@@ -299,6 +301,7 @@ video_button.onclick = function(){
   localStream.getVideoTracks()[0].enabled = !(localStream.getVideoTracks()[0].enabled);
   webcamVideo.srcObject = null;
   webcamVideo.srcObject = localStream;
+  webcamVideo.muted = true;
   webcamVideo.play();
 }
 
@@ -315,6 +318,7 @@ video_button.onclick = function(){
    localStream.getAudioTracks()[0].enabled = !(localStream.getAudioTracks()[0].enabled);
    webcamVideo.srcObject = null;
   webcamVideo.srcObject = localStream;
+   webcamVideo.muted = true;
   webcamVideo.play();
  }
    /*
