@@ -19,7 +19,7 @@ const servers = {
 let pc = new RTCPeerConnection(servers);
 let localStream = null;
 let remoteStream = null;
-let newStream;
+let newStream = null;
 // Here |pc| represent peer connection
 // with remote audio and video streams attached.
 //let pc = new RTCPeerConnection();
