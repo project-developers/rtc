@@ -240,6 +240,7 @@ let sender = null;
   //create button to toggle video
 var video_button = document.getElementById("cameraButton");
 //video_button.appendChild(document.createTextNode("Toggle hold"));
+  /*
 video_button.onclick = function(){
   if(video_button.innerText == "Camera Off"){
     video_button.innerText = "Camera On"
@@ -248,6 +249,13 @@ video_button.onclick = function(){
   };
   localStream.getVideoTracks()[0].enabled = !(localStream.getVideoTracks()[0].enabled);
 }
+  */
+video_button.onclick = function(evt) {
+  const newState = !localStream.getVideoTracks()[0].enabled;
+  video_button.innerHTML = newState ? "&#x25B6;&#xFE0F;" : "&#x23F8;&#xFE0F;";
+  localStream.getVideoTracks()[0].enabled = newState;
+}
+  
 var audio_button = document.getElementById("muteButton");
 //video_button.appendChild(document.createTextNode("Toggle hold"));
 /*
