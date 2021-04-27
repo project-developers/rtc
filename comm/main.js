@@ -106,17 +106,7 @@ callButton.onclick = async () => {
   };
   // Create offer
   const offerDescription = await pc.createOffer();
-  /*
-  pc.onnegotiationneeded = async options => {
-  await pc.setLocalDescription(await pc.createOffer(options));
-  signaler.send({ description: pc.localDescription });
-};
-pc.oniceconnectionstatechange = () => {
-  if (pc.iceConnectionState === "failed") {
-    pc.restartIce();
-  }
-};
-  */
+  
   await pc.setLocalDescription(offerDescription);
   const offer = {
     sdp: offerDescription.sdp,
@@ -164,36 +154,7 @@ answerButton.onclick = async () => {
   const answerDescription = await pc.createAnswer();
   await pc.setLocalDescription(answerDescription);
   const description = callData.offer;
-/*  
-  let ignoreOffer = false;
-signaler.onmessage = async ({ data: { description, candidate } }) => {
-  try {
-    if (description) {
-      const offerCollision = (description.type == "offer") &&
-                             (makingOffer || pc.signalingState != "stable");
-      ignoreOffer = !polite && offerCollision;
-      if (ignoreOffer) {
-        return;
-      }
-      await pc.setRemoteDescription(description);
-      if (description.type == "offer") {
-        await pc.setLocalDescription();
-        signaler.send({ description: pc.localDescription })
-      }
-    } else if (candidate) {
-      try {
-        await pc.addIceCandidate(candidate);
-      } catch(err) {
-        if (!ignoreOffer) {
-          throw err;
-        }
-      }
-    }
-  } catch(err) {
-    console.error(err);
-  }
-}
-      */  
+
   const answer = {
     type: answerDescription.type,
     sdp: answerDescription.sdp,
@@ -263,6 +224,7 @@ newStream = await navigator.mediaDevices.getUserMedia({ video: {facingMode: 'use
   // example to change video camera, suppose selected value saved into window.selectedCamera
 
 switchCameraButton.onclick = async () => {
+  if(cam == 0){
 navigator.mediaDevices
   .getUserMedia({
     video: {
@@ -285,7 +247,32 @@ navigator.mediaDevices
   .catch(function(err) {
     console.error('Error happens:', err);
   });
-  
+  cam = 1
+}else{
+  navigator.mediaDevices
+  .getUserMedia({
+    video: {
+      facingMode: 'user'
+    }
+  })
+  .then(function(stream) {
+  webcamVideo.srcObject = null;
+  webcamVideo.srcObject = stream;
+  webcamVideo.play();
+    let videoTrack = stream.getVideoTracks()[0];
+ //   PCs.forEach(function(pc) {
+      var sender = pc.getSenders().find(function(s) {
+        return s.track.kind == videoTrack.kind;
+      });
+      console.log('found sender:', sender);
+      sender.replaceTrack(videoTrack);
+   // });
+  })
+  .catch(function(err) {
+    console.error('Error happens:', err);
+  });
+  cam = 0
+}
 }
  
  //create button to toggle video
