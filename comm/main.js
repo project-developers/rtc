@@ -65,6 +65,7 @@ const offerOptions = {
 webcamButton.onclick = async () => {
   localStream = await navigator.mediaDevices.getUserMedia({ video: true, audio: true });
   newState1 = !localStream.getAudioTracks()[0].enabled;
+  newState2 = !localStream.getVideoTracks()[0].enabled;
   //localStream.muted = true;
   remoteStream = new MediaStream();
   //pc = new RTCPeerConnection(servers);
@@ -239,6 +240,7 @@ navigator.mediaDevices
   webcamVideo.play();
     let videoTrack = stream.getVideoTracks()[0];
   newState1 = !stream.getAudioTracks()[0].enabled;
+  newState2 = !stream.getVideoTracks()[0].enabled;
  //   PCs.forEach(function(pc) {
       var sender = pc.getSenders().find(function(s) {
         return s.track.kind == videoTrack.kind;
@@ -265,6 +267,7 @@ navigator.mediaDevices
   webcamVideo.play();
     let videoTrack = stream.getVideoTracks()[0];
     newState1 = !stream.getAudioTracks()[0].enabled;
+    newState2 = !stream.getVideoTracks()[0].enabled;
  //   PCs.forEach(function(pc) {
       var sender = pc.getSenders().find(function(s) {
         return s.track.kind == videoTrack.kind;
@@ -284,7 +287,7 @@ navigator.mediaDevices
  //create button to toggle video
 var video_button = document.getElementById("cameraButton");
 //video_button.appendChild(document.createTextNode("Toggle hold"));
-
+/*
 video_button.onclick = function(){
   if(video_button.innerText == "Camera Off"){
     video_button.innerText = "Camera On"
@@ -293,7 +296,16 @@ video_button.onclick = function(){
   };
   localStream.getVideoTracks()[0].enabled = !(localStream.getVideoTracks()[0].enabled);
 }
+*/
+  
+var newState2;
+  video_button.onclick = function(evt) {
+  //newState1 = !localStream.getAudioTracks()[0].enabled;
 
+  video_button.innerHTML = newState2 ? "&#x25B6;&#xFE0F;" : "&#x23F8;&#xFE0F;";
+  localStream.getVideoTracks()[0].enabled = newState2;
+}
+  
 var audio_button = document.getElementById("muteButton");
 //video_button.appendChild(document.createTextNode("Toggle hold"));
 /*
