@@ -158,9 +158,10 @@ newStream = await navigator.mediaDevices.getUserMedia({ video: {facingMode: 'use
   // example to change video camera, suppose selected value saved into window.selectedCamera
 switchCameraButton.onclick = async () => {
 if(cam == 0){
-navigator.mediaDevices
+  localStream = null;
+localStream = navigator.mediaDevices
   .getUserMedia({
-    //audio: true,
+    audio: true,
     video: {
       facingMode: 'environment'
     }
@@ -186,9 +187,10 @@ navigator.mediaDevices
   });
   cam = 1
 }else{
-navigator.mediaDevices
+localStream = null;
+localStream = navigator.mediaDevices
   .getUserMedia({
-    //audio: true,
+    audio: true,
     video: {
       facingMode: 'user'
     }
