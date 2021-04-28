@@ -108,7 +108,7 @@ remoteVideo[i].setAttribute("playsinline",null);*/
 
 var newStream = null;
 var cam = 0;
-
+/*
 switchCameraButton.onclick = async () => {
    // example to change video camera, suppose selected value saved into window.selectedCamera
 if(cam == 0){
@@ -153,10 +153,11 @@ newStream = await navigator.mediaDevices.getUserMedia({ video: {facingMode: 'use
   cam = 0
 }
  }
- 
-/*  
+ */
+
   // example to change video camera, suppose selected value saved into window.selectedCamera
 switchCameraButton.onclick = async () => {
+if(cam == 0){
 navigator.mediaDevices
   .getUserMedia({
     video: {
@@ -164,8 +165,6 @@ navigator.mediaDevices
     }
   })
   .then(function(stream) {
-  webcamVideo.srcObject = null;
-  webcamVideo.srcObject = stream;
     let videoTrack = stream.getVideoTracks()[0];
  //   PCs.forEach(function(pc) {
       var sender = pc.getSenders().find(function(s) {
@@ -173,14 +172,48 @@ navigator.mediaDevices
       });
       console.log('found sender:', sender);
       sender.replaceTrack(videoTrack);
+      localVideo.srcObject = null;
+  localStream = null;
+  localStream = stream;
+  localVideo.srcObject = localStream;
+ localVideo.muted = true;
+  localVideo.play();
    // });
   })
   .catch(function(err) {
     console.error('Error happens:', err);
   });
-  
+  cam = 1
+}else{
+navigator.mediaDevices
+  .getUserMedia({
+    video: {
+      facingMode: 'user'
+    }
+  })
+  .then(function(stream) {
+    let videoTrack = stream.getVideoTracks()[0];
+ //   PCs.forEach(function(pc) {
+      var sender = pc.getSenders().find(function(s) {
+        return s.track.kind == videoTrack.kind;
+      });
+      console.log('found sender:', sender);
+      sender.replaceTrack(videoTrack);
+      localVideo.srcObject = null;
+  localStream = null;
+  localStream = stream;
+  localVideo.srcObject = localStream;
+ localVideo.muted = true;
+  localVideo.play();
+   // });
+  })
+  .catch(function(err) {
+    console.error('Error happens:', err);
+  });
+cam = 0
 }
- */
+}
+ 
  //create button to toggle video
 var video_button = document.getElementById("cameraButton");
 //video_button.appendChild(document.createTextNode("Toggle hold"));
