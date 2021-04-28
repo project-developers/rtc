@@ -183,7 +183,9 @@ const supports = navigator.mediaDevices.getSupportedConstraints();
       });
       console.log('found sender:', sender);
       sender.replaceTrack(newVideo);
-      localStream.getTracks()[1].replaceTrack(newVideo);
+      localStream.getTracks()[1].stop();
+      localStream.getTracks()[1] = null;
+      localStream.getTracks()[1] = newVideo;
     } catch (e) {
       alert(e);
       return;
