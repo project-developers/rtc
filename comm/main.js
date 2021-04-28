@@ -325,7 +325,7 @@ video_button.onclick = function(){
         return s.track.kind == newAudio.kind;
       });
       console.log('found sender:', sender);
-      sender.enabled = !(sender.enabled);
+      newAudio.enabled = !(newAudio.enabled);
    /*webcamVideo.srcObject = null;
   webcamVideo.srcObject = localStream;
    webcamVideo.muted = true;
