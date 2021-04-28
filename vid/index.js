@@ -124,12 +124,12 @@ tracks.forEach(track => track.stop());
       });
       console.log('found sender:', sender);
       sender.replaceTrack(newVideo);
-   webcamVideo.srcObject = null;
+   localVideo.srcObject = null;
   localStream = null;
   localStream = newStream;
-  webcamVideo.srcObject = localStream;
- webcamVideo.muted = true;
-  webcamVideo.play();
+  localVideo.srcObject = localStream;
+ localVideo.muted = true;
+  localVideo.play();
   cam = 1
 }else{
   if(newStream){
@@ -144,12 +144,12 @@ newStream = await navigator.mediaDevices.getUserMedia({ video: {facingMode: 'use
       });
       console.log('found sender:', sender);
       sender.replaceTrack(newVideo);
-   webcamVideo.srcObject = null;
+   localVideo.srcObject = null;
   localStream = null;
   localStream = newStream;
-  webcamVideo.srcObject = localStream;
- webcamVideo.muted = true;
-  webcamVideo.play();
+  localVideo.srcObject = localStream;
+ localVideo.muted = true;
+  localVideo.play();
   cam = 0
 }
  }
