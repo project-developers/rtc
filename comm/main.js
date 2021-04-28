@@ -320,11 +320,16 @@ video_button.onclick = function(){
    }else{
    audio_button.innerText = "Mute"
    };
-   localStream.getAudioTracks()[0].enabled = !(localStream.getAudioTracks()[0].enabled);
-   webcamVideo.srcObject = null;
+   var newAudio = localStream.getAudioTracks()[0]; //.enabled = !(localStream.getAudioTracks()[0].enabled);
+   var sender = pc.getSenders().find(function(s) {
+        return s.track.kind == newAudio.kind;
+      });
+      console.log('found sender:', sender);
+      sender.enabled = !(sender.enabled);
+   /*webcamVideo.srcObject = null;
   webcamVideo.srcObject = localStream;
    webcamVideo.muted = true;
-  webcamVideo.play();
+  webcamVideo.play();*/
  }
    /*
    audio_button.onclick = function(evt) {
