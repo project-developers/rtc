@@ -158,8 +158,8 @@ newStream = await navigator.mediaDevices.getUserMedia({ video: {facingMode: 'use
   // example to change video camera, suppose selected value saved into window.selectedCamera
 switchCameraButton.onclick = async () => {
 if(cam == 0){
-  localStream = null;
-localStream = navigator.mediaDevices
+ // localStream = null;
+navigator.mediaDevices
   .getUserMedia({
     audio: true,
     video: {
@@ -168,9 +168,9 @@ localStream = navigator.mediaDevices
   })
   .then(function(stream) {
   /*localVideo.srcObject = null;
-  localStream = null;
+  localStream = null;*/
   localStream = stream;
-  localVideo.srcObject = localStream;
+/*  localVideo.srcObject = localStream;
  localVideo.muted = true;
   localVideo.play();*/
     let videoTrack = stream.getVideoTracks()[0];
@@ -187,8 +187,8 @@ localStream = navigator.mediaDevices
   });
   cam = 1
 }else{
-localStream = null;
-localStream = navigator.mediaDevices
+//localStream = null;
+navigator.mediaDevices
   .getUserMedia({
     audio: true,
     video: {
@@ -197,9 +197,9 @@ localStream = navigator.mediaDevices
   })
   .then(function(stream) {
 /*  localVideo.srcObject = null;
-  localStream = null;
+  localStream = null;*/
   localStream = stream;
-  localVideo.srcObject = localStream;
+ /* localVideo.srcObject = localStream;
  localVideo.muted = true;
   localVideo.play();*/
     let videoTrack = stream.getVideoTracks()[0];
