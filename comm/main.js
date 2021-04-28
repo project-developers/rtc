@@ -72,8 +72,8 @@ webcamButton.onclick = async () => {
   });
   
   const [audioReceiver, videoReceiver] = pc.getReceivers();
-  audioReceiver.playoutDelayHint = 0.5;
-  videoReceiver.playoutDelayHint = 0.5;
+  audioReceiver.playoutDelayHint = 0.1;
+  videoReceiver.playoutDelayHint = 0.1;
   // Pull tracks from remote stream, add to video stream
   pc.ontrack = (event) => {
     event.streams[0].getTracks().forEach((track) => {
@@ -81,6 +81,7 @@ webcamButton.onclick = async () => {
     });
   };
   
+  pc.addTransceiver("video"); // The line to be added
   
   webcamVideo.srcObject = localStream;
   webcamVideo.muted = true;
@@ -236,9 +237,9 @@ tracks.forEach(track => track.stop());
       });
       console.log('found sender:', sender);
       sender.replaceTrack(newVideo);
-   webcamVideo.srcObject = null;
-  webcamVideo.srcObject = localStream;
-  webcamVideo.muted = true;
+   //webcamVideo.srcObject = null;
+  //webcamVideo.srcObject = localStream;
+ // webcamVideo.muted = true;
   webcamVideo.play();
   cam = 1
 }else{
@@ -254,9 +255,9 @@ newStream = await navigator.mediaDevices.getUserMedia({ video: {facingMode: 'use
       });
       console.log('found sender:', sender);
       sender.replaceTrack(newVideo);
-   webcamVideo.srcObject = null;
-  webcamVideo.srcObject = localStream;
-  webcamVideo.muted = true;
+ //  webcamVideo.srcObject = null;
+//  webcamVideo.srcObject = localStream;
+//  webcamVideo.muted = true;
   webcamVideo.play();
   // webcamVideo.muted = true;
   cam = 0
@@ -300,9 +301,9 @@ video_button.onclick = function(){
   video_button.innerText = "Camera Off"
   };
   localStream.getVideoTracks()[0].enabled = !(localStream.getVideoTracks()[0].enabled);
-  webcamVideo.srcObject = null;
-  webcamVideo.srcObject = localStream;
-  webcamVideo.muted = true;
+//  webcamVideo.srcObject = null;
+//  webcamVideo.srcObject = localStream;
+  //webcamVideo.muted = true;
   webcamVideo.play();
 }
 
