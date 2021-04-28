@@ -119,7 +119,7 @@ tracks.forEach(track => track.stop());
    newStream = await navigator.mediaDevices.getUserMedia({ video: {facingMode: 'environment'}, audio: false }); // Or 'environment'user
    var newVideo = newStream.getVideoTracks()[0];
    //var videoTrack = localStream.getVideoTracks()[0];
-   var sender = pc.getSenders().find(function(s) {
+   var sender = peerConnection.getSenders().find(function(s) {
         return s.track.kind == newVideo.kind;
       });
       console.log('found sender:', sender);
@@ -139,7 +139,7 @@ tracks.forEach(track => track.stop());
 newStream = await navigator.mediaDevices.getUserMedia({ video: {facingMode: 'user'}, audio: false }); // Or 'environment'user
   var newVideo = newStream.getVideoTracks()[0];
    //var videoTrack = localStream.getVideoTracks()[0];
-   var sender = pc.getSenders().find(function(s) {
+   var sender = peerConnection.getSenders().find(function(s) {
         return s.track.kind == newVideo.kind;
       });
       console.log('found sender:', sender);
