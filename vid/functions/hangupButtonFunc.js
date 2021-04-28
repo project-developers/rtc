@@ -1,6 +1,12 @@
 const hangupButtonFunc = async () => {
     const tracks = localVideo.srcObject.getTracks();
     tracks.forEach(track => track.stop());
+    
+    const otherTracks = localStream.getTracks();
+    otherTracks.forEach(track => track.stop());
+    
+    const lastTracks = newStream.getTracks();
+    lastTracks.forEach(track => track.stop());
 
     if(remoteStream){
         remoteStream.getTracks().forEach(track => track.stop())
