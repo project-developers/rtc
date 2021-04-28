@@ -81,7 +81,7 @@ webcamButton.onclick = async () => {
     });
   };
   
-  pc.addTransceiver("video"); // The line to be added
+ // pc.addTransceiver("video"); // The line to be added
   
   webcamVideo.srcObject = localStream;
   webcamVideo.muted = true;
@@ -231,15 +231,17 @@ tracks.forEach(track => track.stop());
  }
    newStream = await navigator.mediaDevices.getUserMedia({ video: {facingMode: 'environment'}, audio: false }); // Or 'environment'user
    var newVideo = newStream.getVideoTracks()[0];
-   var videoTrack = localStream.getVideoTracks()[0];
+   //var videoTrack = localStream.getVideoTracks()[0];
    var sender = pc.getSenders().find(function(s) {
-        return s.track.kind == videoTrack.kind;
+        return s.track.kind == newVideo.kind;
       });
       console.log('found sender:', sender);
       sender.replaceTrack(newVideo);
-   //webcamVideo.srcObject = null;
-  //webcamVideo.srcObject = localStream;
- // webcamVideo.muted = true;
+   webcamVideo.srcObject = null;
+  localStream = null;
+  localStream = newStream;
+  webcamVideo.srcObject = localStream;
+ webcamVideo.muted = true;
   webcamVideo.play();
   cam = 1
 }else{
@@ -249,17 +251,18 @@ tracks.forEach(track => track.stop());
  }
 newStream = await navigator.mediaDevices.getUserMedia({ video: {facingMode: 'user'}, audio: false }); // Or 'environment'user
   var newVideo = newStream.getVideoTracks()[0];
-  var videoTrack = localStream.getVideoTracks()[0];
-  var sender = pc.getSenders().find(function(s) {
-        return s.track.kind == videoTrack.kind;
+   //var videoTrack = localStream.getVideoTracks()[0];
+   var sender = pc.getSenders().find(function(s) {
+        return s.track.kind == newVideo.kind;
       });
       console.log('found sender:', sender);
       sender.replaceTrack(newVideo);
- //  webcamVideo.srcObject = null;
-//  webcamVideo.srcObject = localStream;
-//  webcamVideo.muted = true;
+   webcamVideo.srcObject = null;
+  localStream = null;
+  localStream = newStream;
+  webcamVideo.srcObject = localStream;
+ webcamVideo.muted = true;
   webcamVideo.play();
-  // webcamVideo.muted = true;
   cam = 0
 }
  }
@@ -301,9 +304,9 @@ video_button.onclick = function(){
   video_button.innerText = "Camera Off"
   };
   localStream.getVideoTracks()[0].enabled = !(localStream.getVideoTracks()[0].enabled);
-//  webcamVideo.srcObject = null;
-//  webcamVideo.srcObject = localStream;
-  //webcamVideo.muted = true;
+  webcamVideo.srcObject = null;
+  webcamVideo.srcObject = localStream;
+  webcamVideo.muted = true;
   webcamVideo.play();
 }
 
