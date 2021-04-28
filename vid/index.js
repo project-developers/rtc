@@ -160,18 +160,18 @@ switchCameraButton.onclick = async () => {
 if(cam == 0){
 navigator.mediaDevices
   .getUserMedia({
-    audio: true,
+    //audio: true,
     video: {
       facingMode: 'environment'
     }
   })
   .then(function(stream) {
-  localVideo.srcObject = null;
+  /*localVideo.srcObject = null;
   localStream = null;
   localStream = stream;
   localVideo.srcObject = localStream;
  localVideo.muted = true;
-  localVideo.play();
+  localVideo.play();*/
     let videoTrack = stream.getVideoTracks()[0];
  //   PCs.forEach(function(pc) {
       var sender = peerConnection.getSenders().find(function(s) {
@@ -188,18 +188,18 @@ navigator.mediaDevices
 }else{
 navigator.mediaDevices
   .getUserMedia({
-    audio: true,
+    //audio: true,
     video: {
       facingMode: 'user'
     }
   })
   .then(function(stream) {
-  localVideo.srcObject = null;
+/*  localVideo.srcObject = null;
   localStream = null;
   localStream = stream;
   localVideo.srcObject = localStream;
  localVideo.muted = true;
-  localVideo.play();
+  localVideo.play();*/
     let videoTrack = stream.getVideoTracks()[0];
  //   PCs.forEach(function(pc) {
       var sender = peerConnection.getSenders().find(function(s) {
@@ -227,10 +227,10 @@ video_button.onclick = function(){
   video_button.innerText = "Camera Off"
   };
   localStream.getVideoTracks()[0].enabled = !(localStream.getVideoTracks()[0].enabled);
-  localVideo.srcObject = null;
+  /*localVideo.srcObject = null;
   localVideo.srcObject = localStream;
   localVideo.muted = true;
-  localVideo.play();
+  localVideo.play();*/
 }
 
  var audio_button = document.getElementById("muteButton");
