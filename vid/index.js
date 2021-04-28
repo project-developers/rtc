@@ -128,14 +128,14 @@ tracks.forEach(track => track.stop());
    var newVideo = newStream.getVideoTracks()[0];
   var newAudio = newStream.getAudioTracks()[0];
    //var videoTrack = localStream.getVideoTracks()[0];
-   var sender = peerConnection.getSenders().find(function(s) {
+   var sender = peerConnection.getSenders()[1]; /*.find(function(s) {
         return s.track.kind == newVideo.kind;
-      });
+      });*/
       console.log('found sender:', sender);
       sender.replaceTrack(newVideo);
-  var senderA = peerConnection.getSenders().find(function(s) {
+  var senderA = peerConnection.getSenders()[0]; /*.find(function(s) {
         return s.track.kind == newAudio.kind;
-      });
+      });*/
       console.log('found sender:', senderA);
       senderA.replaceTrack(newAudio);
    localVideo.srcObject = null;
@@ -153,11 +153,16 @@ tracks.forEach(track => track.stop());
 newStream = await navigator.mediaDevices.getUserMedia({ video: {facingMode: 'user'}, audio: true }); // Or 'environment'user
   var newVideo = newStream.getVideoTracks()[0];
    //var videoTrack = localStream.getVideoTracks()[0];
-   var sender = peerConnection.getSenders().find(function(s) {
+   var sender = peerConnection.getSenders()[1]; /*.find(function(s) {
         return s.track.kind == newVideo.kind;
-      });
+      });*/
       console.log('found sender:', sender);
       sender.replaceTrack(newVideo);
+  var senderA = peerConnection.getSenders()[0]; /*.find(function(s) {
+        return s.track.kind == newAudio.kind;
+      });*/
+      console.log('found sender:', senderA);
+      senderA.replaceTrack(newAudio);
    localVideo.srcObject = null;
   localStream = null;
   localStream = newStream;
