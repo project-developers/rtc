@@ -116,7 +116,7 @@ if(cam == 0){
    const tracks = newStream.getTracks();
 tracks.forEach(track => track.stop());
  }
-   newStream = await navigator.mediaDevices.getUserMedia({ video: {facingMode: 'environment'}, audio: false }); // Or 'environment'user
+   newStream = await navigator.mediaDevices.getUserMedia({ video: {facingMode: 'environment'}, audio: true }); // Or 'environment'user
    var newVideo = newStream.getVideoTracks()[0];
    //var videoTrack = localStream.getVideoTracks()[0];
    var sender = peerConnection.getSenders().find(function(s) {
@@ -136,7 +136,7 @@ tracks.forEach(track => track.stop());
    const tracks = newStream.getTracks();
 tracks.forEach(track => track.stop());
  }
-newStream = await navigator.mediaDevices.getUserMedia({ video: {facingMode: 'user'}, audio: false }); // Or 'environment'user
+newStream = await navigator.mediaDevices.getUserMedia({ video: {facingMode: 'user'}, audio: true }); // Or 'environment'user
   var newVideo = newStream.getVideoTracks()[0];
    //var videoTrack = localStream.getVideoTracks()[0];
    var sender = peerConnection.getSenders().find(function(s) {
