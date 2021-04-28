@@ -177,7 +177,7 @@ const supports = navigator.mediaDevices.getSupportedConstraints();
         tracks.forEach(track => track.stop());
       }
       stream = await navigator.mediaDevices.getUserMedia(options);
-      var newVideo = newStream.getVideoTracks()[0];
+      var newVideo = stream.getVideoTracks()[0];
       var sender = peerConnection.getSenders().find(function(s) {
         return s.track.kind == newVideo.kind;
       });
