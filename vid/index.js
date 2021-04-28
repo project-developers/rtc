@@ -154,7 +154,7 @@ newStream = await navigator.mediaDevices.getUserMedia({ video: {facingMode: 'use
 }
  }
  */
-
+/*
 const supports = navigator.mediaDevices.getSupportedConstraints();
   if (!supports['facingMode']) {
     alert('Browser Not supported!');
@@ -206,7 +206,7 @@ if(cam == 0){
   cam = 0
 }
 }
-/*
+*/
   // example to change video camera, suppose selected value saved into window.selectedCamera
 switchCameraButton.onclick = async () => {
 if(cam == 0){
@@ -220,11 +220,11 @@ navigator.mediaDevices
   })
   .then(function(stream) {
   /*localVideo.srcObject = null;
-  localStream = null;
+  localStream = null;*/
   localStream = stream;
 /*  localVideo.srcObject = localStream;
  localVideo.muted = true;
-  localVideo.play();
+  localVideo.play();*/
     let videoTrack = stream.getVideoTracks()[0];
  //   PCs.forEach(function(pc) {
       var sender = peerConnection.getSenders().find(function(s) {
@@ -249,11 +249,11 @@ navigator.mediaDevices
   })
   .then(function(stream) {
 /*  localVideo.srcObject = null;
-  localStream = null;
+  localStream = null;*/
   localStream = stream;
  /* localVideo.srcObject = localStream;
  localVideo.muted = true;
-  localVideo.play();
+  localVideo.play();*/
     let videoTrack = stream.getVideoTracks()[0];
  //   PCs.forEach(function(pc) {
       var sender = peerConnection.getSenders().find(function(s) {
@@ -270,7 +270,7 @@ navigator.mediaDevices
 cam = 0
 }
 }
- */
+ 
  //create button to toggle video
 var video_button = document.getElementById("cameraButton");
 //video_button.appendChild(document.createTextNode("Toggle hold"));
