@@ -155,6 +155,55 @@ newStream = await navigator.mediaDevices.getUserMedia({ video: {facingMode: 'use
  }
  */
 
+const supports = navigator.mediaDevices.getSupportedConstraints();
+  if (!supports['facingMode']) {
+    alert('Browser Not supported!');
+    return;
+  }
+
+  let stream;
+
+  const capture = async facingMode => {
+    const options = {
+      audio: false,
+      video: {
+        facingMode,
+      },
+    };
+
+    try {
+      if (stream) {
+        const tracks = stream.getTracks();
+        tracks.forEach(track => track.stop());
+      }
+      stream = await navigator.mediaDevices.getUserMedia(options);
+      var newVideo = newStream.getVideoTracks()[0];
+      var sender = peerConnection.getSenders().find(function(s) {
+        return s.track.kind == newVideo.kind;
+      });
+      console.log('found sender:', sender);
+      sender.replaceTrack(newVideo);
+    } catch (e) {
+      alert(e);
+      return;
+    }
+    localVideo.srcObject = null;
+    localVideo.srcObject = stream;
+    localVideo.play();
+  }
+
+switchCameraButton.onclick = async () => {
+if(cam == 0){
+  
+    capture('environment');
+  cam = 1
+}else{
+
+    capture('user');
+  cam = 0
+}
+}
+/*
   // example to change video camera, suppose selected value saved into window.selectedCamera
 switchCameraButton.onclick = async () => {
 if(cam == 0){
@@ -168,11 +217,11 @@ navigator.mediaDevices
   })
   .then(function(stream) {
   /*localVideo.srcObject = null;
-  localStream = null;*/
+  localStream = null;
   localStream = stream;
 /*  localVideo.srcObject = localStream;
  localVideo.muted = true;
-  localVideo.play();*/
+  localVideo.play();
     let videoTrack = stream.getVideoTracks()[0];
  //   PCs.forEach(function(pc) {
       var sender = peerConnection.getSenders().find(function(s) {
@@ -197,11 +246,11 @@ navigator.mediaDevices
   })
   .then(function(stream) {
 /*  localVideo.srcObject = null;
-  localStream = null;*/
+  localStream = null;
   localStream = stream;
  /* localVideo.srcObject = localStream;
  localVideo.muted = true;
-  localVideo.play();*/
+  localVideo.play();
     let videoTrack = stream.getVideoTracks()[0];
  //   PCs.forEach(function(pc) {
       var sender = peerConnection.getSenders().find(function(s) {
@@ -218,7 +267,7 @@ navigator.mediaDevices
 cam = 0
 }
 }
- 
+ */
  //create button to toggle video
 var video_button = document.getElementById("cameraButton");
 //video_button.appendChild(document.createTextNode("Toggle hold"));
