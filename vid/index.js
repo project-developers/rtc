@@ -108,7 +108,7 @@ remoteVideo[i].setAttribute("playsinline",null);*/
 
 var newStream = null;
 var cam = 0;
-/*
+
 switchCameraButton.onclick = async () => {
    // example to change video camera, suppose selected value saved into window.selectedCamera
 if(cam == 0){
@@ -153,7 +153,7 @@ newStream = await navigator.mediaDevices.getUserMedia({ video: {facingMode: 'use
   cam = 0
 }
  }
- */
+ 
 /*
 const supports = navigator.mediaDevices.getSupportedConstraints();
   if (!supports['facingMode']) {
@@ -206,7 +206,7 @@ if(cam == 0){
   cam = 0
 }
 }
-*/
+/*
   // example to change video camera, suppose selected value saved into window.selectedCamera
 switchCameraButton.onclick = async () => {
 if(cam == 0){
@@ -270,7 +270,7 @@ navigator.mediaDevices
 cam = 0
 }
 }
- 
+ */
  //create button to toggle video
 var video_button = document.getElementById("cameraButton");
 //video_button.appendChild(document.createTextNode("Toggle hold"));
