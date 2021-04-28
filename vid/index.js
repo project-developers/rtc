@@ -160,6 +160,7 @@ switchCameraButton.onclick = async () => {
 if(cam == 0){
 navigator.mediaDevices
   .getUserMedia({
+    audio: true,
     video: {
       facingMode: 'environment'
     }
@@ -187,6 +188,7 @@ navigator.mediaDevices
 }else{
 navigator.mediaDevices
   .getUserMedia({
+    audio: true,
     video: {
       facingMode: 'user'
     }
