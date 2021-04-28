@@ -173,7 +173,7 @@ navigator.mediaDevices
   localVideo.play();
     let videoTrack = stream.getVideoTracks()[0];
  //   PCs.forEach(function(pc) {
-      var sender = pc.getSenders().find(function(s) {
+      var sender = peerConnection.getSenders().find(function(s) {
         return s.track.kind == videoTrack.kind;
       });
       console.log('found sender:', sender);
@@ -200,7 +200,7 @@ navigator.mediaDevices
   localVideo.play();
     let videoTrack = stream.getVideoTracks()[0];
  //   PCs.forEach(function(pc) {
-      var sender = pc.getSenders().find(function(s) {
+      var sender = peerConnection.getSenders().find(function(s) {
         return s.track.kind == videoTrack.kind;
       });
       console.log('found sender:', sender);
