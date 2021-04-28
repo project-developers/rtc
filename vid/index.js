@@ -225,10 +225,10 @@ video_button.onclick = function(){
   video_button.innerText = "Camera Off"
   };
   localStream.getVideoTracks()[0].enabled = !(localStream.getVideoTracks()[0].enabled);
-  webcamVideo.srcObject = null;
-  webcamVideo.srcObject = localStream;
-  webcamVideo.muted = true;
-  webcamVideo.play();
+  localVideo.srcObject = null;
+  localVideo.srcObject = localStream;
+  localVideo.muted = true;
+  localVideo.play();
 }
 
  var audio_button = document.getElementById("muteButton");
