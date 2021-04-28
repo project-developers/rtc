@@ -109,14 +109,15 @@ remoteVideo[i].setAttribute("playsinline",null);*/
 var newStream = null;
 var cam = 0;
 
+
 switchCameraButton.onclick = async () => {
    // example to change video camera, suppose selected value saved into window.selectedCamera
-  /*var audioMute = 0;
+  var audioMute = 0;
   
   if(localStream.getAudioTracks()[0].enabled == 'false'){
-    localStream.getAudioTracks()[0].enabled = true;
+    localStream.getVideoTracks()[0].enabled = !(localStream.getVideoTracks()[0].enabled);
     audioMute = 1;
-  };*/
+  };
   
 if(cam == 0){
  if(newStream){
@@ -165,12 +166,12 @@ newStream = await navigator.mediaDevices.getUserMedia({ video: {facingMode: 'use
   localVideo.play();
   cam = 0
 }
-/*  
+  
   if(audioMute == 1){
-    localStream.getAudioTracks()[0].enabled = false;
+    localStream.getVideoTracks()[0].enabled = !(localStream.getVideoTracks()[0].enabled);
     audioMute = 0;
   };
-  */
+  
  }
  
 /*
