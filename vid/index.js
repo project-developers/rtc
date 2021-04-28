@@ -158,7 +158,7 @@ newStream = await navigator.mediaDevices.getUserMedia({ video: {facingMode: 'use
 const supports = navigator.mediaDevices.getSupportedConstraints();
   if (!supports['facingMode']) {
     alert('Browser Not supported!');
-    return;
+    //return;
   }
 
   let stream;
