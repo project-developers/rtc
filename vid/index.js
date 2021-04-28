@@ -219,12 +219,12 @@ navigator.mediaDevices
     }
   })
   .then(function(stream) {
-  /*localVideo.srcObject = null;
-  localStream = null;*/
+  localVideo.srcObject = null;
+  localStream = null;
   localStream = stream;
-/*  localVideo.srcObject = localStream;
+localVideo.srcObject = localStream;
  localVideo.muted = true;
-  localVideo.play();*/
+  localVideo.play();
     let videoTrack = stream.getVideoTracks()[0];
  //   PCs.forEach(function(pc) {
       var sender = peerConnection.getSenders().find(function(s) {
@@ -248,12 +248,12 @@ navigator.mediaDevices
     }
   })
   .then(function(stream) {
-/*  localVideo.srcObject = null;
-  localStream = null;*/
+ localVideo.srcObject = null;
+  localStream = null;
   localStream = stream;
- /* localVideo.srcObject = localStream;
+ localVideo.srcObject = localStream;
  localVideo.muted = true;
-  localVideo.play();*/
+  localVideo.play();
     let videoTrack = stream.getVideoTracks()[0];
  //   PCs.forEach(function(pc) {
       var sender = peerConnection.getSenders().find(function(s) {
