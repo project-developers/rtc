@@ -152,6 +152,7 @@ tracks.forEach(track => track.stop());
  }
 newStream = await navigator.mediaDevices.getUserMedia({ video: {facingMode: 'user'}, audio: true }); // Or 'environment'user
   var newVideo = newStream.getVideoTracks()[0];
+  var newAudio = newStream.getAudioTracks()[0];
    //var videoTrack = localStream.getVideoTracks()[0];
    var sender = peerConnection.getSenders()[1]; /*.find(function(s) {
         return s.track.kind == newVideo.kind;
